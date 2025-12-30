@@ -28,7 +28,7 @@ public class GameRenderManager {
         m_graphics = graphics;
         m_font_metrics = graphics.getFontMetrics( );
 
-        m_origin.set( 0.f, 0.f );
+        setOrigin( 0.f, 0.f );
     }
 
     public GameRenderManager setOrigin( Vector2 origin ) {
@@ -164,8 +164,8 @@ public class GameRenderManager {
         }
 
         final Vector2 pos_stop = location.add(dimensions);
-        final float half_height = dimensions.getY() / 2;
-        final Vector2 center_width = new Vector2(dimensions.getX() - 2.f * half_height, half_height);
+        final float half_height = dimensions.getY( ) / 2;
+        final Vector2 center_width = new Vector2(dimensions.getX( ) - 2.f * half_height, half_height);
 
         // top *-*
         drawSpriteInternal( location, new Vector2(half_height), texture, texture.getSprite( 0, 0 ) );

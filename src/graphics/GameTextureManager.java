@@ -19,8 +19,7 @@ public class GameTextureManager {
             return false;
 
         try {
-            //BufferedImage texture = ImageIO.read( new File( path ) );
-            BufferedImage texture = ImageIO.read( getClass().getResource( path ) );
+            BufferedImage texture = ImageIO.read( getClass( ).getResource( path ) );
 
             if ( texture != null )
                 m_textures.put( alias, new GameTexture( texture, columns, rows ) );

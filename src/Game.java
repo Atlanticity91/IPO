@@ -51,6 +51,7 @@ public class Game
         m_input_manager.addKey( KeyEvent.VK_LEFT );
         m_input_manager.addKey( KeyEvent.VK_RIGHT );
         m_input_manager.addKey( KeyEvent.VK_SPACE );
+        m_input_manager.addKey( KeyEvent.VK_ESCAPE );
 
         m_input_manager.addButton( MouseEvent.BUTTON1 );
     }

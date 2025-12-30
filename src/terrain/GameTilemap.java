@@ -3,8 +3,12 @@ package terrain;
 import entities.GameEntityManager;
 import graphics.GameRenderManager;
 import inputs.GameInputManager;
+import utils.GameDirection;
 import utils.GameStateManager;
+import utils.Globals;
 import utils.Vector2;
+
+import java.awt.*;
 
 public class GameTilemap {
 
@@ -12,27 +16,44 @@ public class GameTilemap {
     private GameTile[] m_tiles;
     private int m_columns = 0;
     private int m_rows = 0;
+    private float m_tile_dimensions = 0.f;
 
     public GameTilemap( ) {
         m_origin = new Vector2( );
         m_tiles = null;
     }
 
-    public void create( int columns, int rows, Vector2 dimensions ) {
+    public void create( int columns, int rows, float tile_dimensions ) {
+        m_origin = new Vector2(
+                ( Globals.WIN_WIDTH - columns * tile_dimensions ) / 2,
+                ( Globals.WIN_HEIGHT - Globals.PLAY_UI_HEIGHT - rows * tile_dimensions ) / 2
+        );
         m_tiles = new GameTile[ columns * rows ];
         m_columns = columns;
         m_rows = rows;
+        m_tile_dimensions = tile_dimensions;
+    }
 
-        for ( int y = 0; y < rows; y++ ) {
-            for ( int x = 0; x < columns; x++ ) {
-                Vector2 location = new Vector2(
-                        (float)x * dimensions.getX( ),
-                        (float)y * dimensions.getY( )
-                );
+    public void spawnTile( char tile_type, int column, int row, Object entity ) {
+        final Vector2 location = new Vector2( column * m_tile_dimensions, row * m_tile_dimensions );
+        final Vector2 dimensions = new Vector2( m_tile_dimensions );
+        GameTile tile = null;
 
-                m_tiles[ y * columns + x ] = new GameTile( location, dimensions );
-            }
+        switch ( tile_type ) {
+            case '#' : tile = new GameTileDecoration( location, dimensions, false ); break;
+            case ' ' : tile = new GameTileDecoration( location, dimensions, true ); break;
+            case 'O' : tile = new GameTileOutput( location, dimensions, Color.cyan ); break;
+
+            default : break;
         }
+
+        if ( tile == null )
+            return;
+
+        m_tiles[ row * m_columns + column ] = tile;
+
+        if ( tile instanceof GameTileInteractable )
+            ((GameTileInteractable)tile).onEnter( entity );
     }
 
     public void tick(
@@ -44,6 +65,8 @@ public class GameTilemap {
             return;
 
         for ( GameTile tile : m_tiles ) {
+            if ( tile instanceof GameTileInteractable )
+                ((GameTileInteractable)tile).tick( state_manager, input_manager, entity_manager, this );
         }
     }
 
@@ -53,8 +76,42 @@ public class GameTilemap {
 
         render_manager.setOrigin( m_origin );
 
-        for ( GameTile tile : m_tiles )
-            tile.display( render_manager );
+        for ( GameTile tile : m_tiles ) {
+            if ( tile != null )
+                tile.display( render_manager );
+        }
+    }
+
+    public Vector2 getOrigin( ) { return m_origin; }
+
+    private Vector2 getLocationAt( Vector2 location, GameDirection direction ) {
+        return switch ( direction ) {
+            case None -> location;
+            case North -> location.add( 0.f, 1.f );
+            case East -> location.add( 1.f, 0.f );
+            case South -> location.add( 0.f, -1.f );
+            case West -> location.add( -1.f, 0.f );
+            case Northeast -> location.add( 1.f );
+            case Southeast -> location.add( 1.f, -1.f );
+            case Southwest -> location.add( -1.f, -1.f );
+            case Northwest -> location.add( -1.f, 1.f );
+        };
+    }
+
+    public GameTile getTile( Vector2 location ) {
+        return getTileAt( location, GameDirection.None );
+    }
+
+    public GameTile getTileAt( Vector2 location, GameDirection direction ) {
+        final Vector2 adjust_pos = location.sub( m_origin ).div( m_tile_dimensions );
+        final Vector2 tile_pos = getLocationAt( adjust_pos, direction );
+        final int x = (int)tile_pos.getX( );
+        final int y = (int)tile_pos.getY( );
+
+        if ( x < 0 || x >= m_columns || y < 0 || y > m_rows)
+            return null;
+
+        return m_tiles[ y * m_columns + x ];
     }
 
 }
