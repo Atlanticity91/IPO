@@ -7,6 +7,7 @@ import utils.GameStateManager;
 import utils.Rectangle;
 import utils.Vector2;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public abstract class GameUIScreen {
@@ -18,10 +19,14 @@ public abstract class GameUIScreen {
             Vector2 position,
             Vector2 dimension
     ) {
-        final Rectangle hitbox = render_manager.drawButton( text, position, dimension );
+        final Rectangle hitbox = render_manager.getHitbox( position, dimension );
+        final boolean is_over = input_manager.getMouseLocation( ).isIn( hitbox );
+        final Color color = is_over ? Color.black : Color.gray;
+
+        render_manager.drawButton( text, position, dimension, color, is_over );
 
         if ( input_manager.isMouseButton( MouseEvent.BUTTON1, GameInputState.Pressed ) )
-            return input_manager.getMouseLocation( ).isIn( hitbox );
+            return is_over;
 
         return false;
     }

@@ -9,6 +9,7 @@ public class Window extends JFrame {
         super( Globals.WIN_TITLE );
 
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        setResizable( false );
 
         Container pane = getContentPane( );
 

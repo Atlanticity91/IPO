@@ -2,12 +2,12 @@ package utils;
 
 public class Rectangle {
 
-    private Vector2 m_min;
-    private Vector2 m_max;
+    private final Vector2 m_min;
+    private final Vector2 m_max;
 
-    public Rectangle( Vector2 min, Vector2 max ) {
-        m_min = min;
-        m_max = min.add( max );
+    public Rectangle( Vector2 position, Vector2 dimensions ) {
+        m_min = position;
+        m_max = position.add( dimensions );
     }
 
     @Override

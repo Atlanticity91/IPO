@@ -57,6 +57,7 @@ public class Game
 
     private void loadTextures( ) {
         m_render_manager.load( "ui_borders", "/assets/ui_borders.png", 4, 4 );
+        m_render_manager.load( "ui_lives", "/assets/ui_lives.png", 2, 1 );
 
         m_render_manager.setButtonTexture( "ui_borders" );
     }
@@ -83,7 +84,7 @@ public class Game
 
     @Override
     public void mouseMoved( MouseEvent mouse_event ) {
-        m_input_manager.notifyMouseMoved( mouse_event, this);
+        m_input_manager.notifyMouseMoved( mouse_event, this );
     }
 
     @Override

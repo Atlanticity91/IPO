@@ -12,4 +12,9 @@ public class Globals {
     public static final float PI_FOURTH = PI * .25f;
     public static final float TO_RADS = PI / 180.f;
 
+    public static final int PLAY_UI_HEIGHT = 64;
+    public static final int PLAY_UI_LEFT_WIDTH = 128;
+
+    public static final int MAX_LIVE_COUNT = 3;
+
 }

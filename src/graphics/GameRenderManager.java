@@ -32,7 +32,9 @@ public class GameRenderManager {
     }
 
     public GameRenderManager setOrigin( Vector2 origin ) {
-        return setOrigin( (int)origin.getX( ), (int)origin.getY( ) );
+        m_origin.set( origin );
+
+        return this;
     }
 
     public GameRenderManager setOrigin( float x, float y ) {
@@ -40,78 +42,84 @@ public class GameRenderManager {
 
         return this;
     }
+
     public GameRenderManager setColor( Color color ) {
         m_graphics.setColor( color );
 
         return this;
     }
 
-    public Rectangle drawRect(Vector2 min, Vector2 max ) {
+    public void drawRect( Vector2 min, Vector2 max ) {
         final Color color = m_graphics.getColor( );
 
-        return drawRect( min, max, color );
+        drawRect( min, max, color );
     }
 
-    private void drawRectInternal( Vector2 min, Vector2 max ) {
+    public void drawRect( Vector2 min, Vector2 max, Color color ) {
         final Vector2 position = getPosition( min );
-
-        m_graphics.drawRect( (int)position.getX( ), (int)position.getY( ), (int)max.getX( ), (int)max.getY( ) );
-    }
-
-    public Rectangle drawRect(Vector2 min, Vector2 max, Color color ) {
         final Color old_color = m_graphics.getColor( );
 
         m_graphics.setColor( color );
-        drawRectInternal( min, max );
+        m_graphics.fillRect( (int)position.getX( ), (int)position.getY( ), (int)max.getX( ), (int)max.getY( ) );
         m_graphics.setColor( old_color );
-
-        return new utils.Rectangle( getPosition( min ), max );
     }
 
-    public GameRenderManager drawText( String text ) {
+    public void drawCircle( Vector2 location, float diameter ) {
+        final Color color = m_graphics.getColor( );
+
+        drawCircle( location, diameter, color );
+    }
+
+    public void drawCircle( Vector2 location, float diameter, Color color ) {
+        final Vector2 position = getPosition( location );
+        final Color old_color = m_graphics.getColor( );
+
+        m_graphics.setColor( color );
+        m_graphics.fillOval( (int)position.getX( ), (int)position.getY( ), (int)diameter, (int)diameter );
+        m_graphics.setColor( old_color );
+    }
+
+    public void drawText( String text ) {
         final Vector2 location = new Vector2( );
         final Color color = m_graphics.getColor( );
 
-        return drawText( text, location, color );
+        drawText( text, location, color );
     }
 
-    public GameRenderManager drawText( String text, Vector2 location ) {
+    public void drawText( String text, Vector2 location ) {
         final Color color = m_graphics.getColor( );
 
-        return drawText( text, location, color );
+        drawText( text, location, color );
     }
 
-    public GameRenderManager drawText( String text, Vector2 location, Color color ) {
+    public void drawText( String text, Vector2 location, Color color ) {
         final Vector2 position = getPosition( location );
         final Color old_color = m_graphics.getColor( );
 
         m_graphics.setColor( color );
         m_graphics.drawChars( text.toCharArray( ), 0, text.length( ), (int)position.getX( ), (int)position.getY( ) );
         m_graphics.setColor( old_color );
-
-        return this;
     }
 
-    public GameRenderManager drawTextCentered( String text, Vector2 min, Vector2 max ) {
+    public void drawTextCentered( String text, Vector2 location, Vector2 dimensions ) {
         final Color color = m_graphics.getColor( );
 
-        return drawTextCentered( text, min, max, color );
+        drawTextCentered( text, location, dimensions, color );
     }
 
-    public GameRenderManager drawTextCentered( String text, Vector2 min, Vector2 max, Color color ) {
-        final Vector2 position = getPosition( min.add( max ) );
+    public void drawTextCentered( String text, Vector2 location, Vector2 dimensions, Color color ) {
+        final Vector2 position = getPosition( location );
         final Color old_color = m_graphics.getColor( );
         final int text_width = m_font_metrics.stringWidth( text );
         final int text_height = m_font_metrics.getHeight( );
         final int text_ascent = m_font_metrics.getAscent( );
-        final int x = ( (int)position.getX( ) - text_width ) / 2;
-        final int y = (int)( m_origin.getY( ) + min.getY( ) ) + ( ( (int)max.getY( ) - text_height ) / 2 ) + text_ascent;
+
+        final int x = (int)position.getX( ) + ( ( (int)dimensions.getX( ) - text_width ) / 2 );
+        final int y = (int)position.getY( ) + ( ( (int)dimensions.getY( ) - text_height ) / 2 ) + text_ascent;
 
         m_graphics.setColor( color );
         m_graphics.drawChars( text.toCharArray( ), 0, text.length( ), x, y );
         m_graphics.setColor( old_color );
-
-        return this;
     }
 
     private void drawSpriteInternal( Vector2 location, Vector2 dimensions, GameTexture texture, GameSprite sprite ) {
@@ -124,61 +132,72 @@ public class GameRenderManager {
         m_graphics.drawImage( texture.Image, x1, y1, x2, y2, sprite.X1, sprite.Y1, sprite.X2, sprite.Y2, null );
     }
 
-    public Rectangle drawSprite( String alias, Vector2 location, Vector2 dimensions, int column, int row ) {
+    public void drawSprite( String alias, Vector2 location, Vector2 dimensions, int column, int row ) {
         final GameTexture texture = m_texture_manager.get( alias );
 
-        if ( texture == null )
-            return null;
+        if ( texture == null ) return;
 
         final GameSprite sprite = texture.getSprite( column, row );
 
-        if ( sprite == null )
-            return null;
+        if ( sprite == null ) return;
 
         drawSpriteInternal( location, dimensions, texture, sprite );
-
-        return new Rectangle( getPosition( location ), dimensions );
     }
 
-    public Rectangle drawTexture( String alias, Vector2 location, Vector2 dimensions ) {
-        return drawSprite( alias, location, dimensions, 0, 0 );
+    public void drawTexture( String alias, Vector2 location, Vector2 dimensions ) {
+        drawSprite( alias, location, dimensions, 0, 0 );
     }
 
-    public utils.Rectangle drawButton( String text, Vector2 min, Vector2 max ) {
+    public void drawBorders( Vector2 location, Vector2 dimensions ) {
         final Color color = m_graphics.getColor( );
 
-        return drawButton( text, min, max, color );
+        drawBorders( location, dimensions, color, false );
     }
 
-    private void drawButtonBorders( Vector2 min, Vector2 max ) {
-        final GameTexture texture = m_texture_manager.get( m_button_texture );
+    public void drawBorders( Vector2 location, Vector2 dimensions, Color color, boolean is_over ) {
+        final GameTexture texture = m_texture_manager.get(m_button_texture);
 
-        if ( texture != null ) {
-            // TODO
-            // top *-*
-            drawSpriteInternal( min, max, texture, texture.getSprite( 0, 0 ) );
-            drawSpriteInternal( min, max, texture, texture.getSprite( 1, 0 ) );
-            drawSpriteInternal( min, max, texture, texture.getSprite( 3, 0 ) );
+        if ( texture == null ) {
+            drawRect( location, dimensions, color );
 
-            // bottom *-*
-            drawSpriteInternal( min, max, texture, texture.getSprite( 0, 3 ) );
-            drawSpriteInternal( min, max, texture, texture.getSprite( 1, 3 ) );
-            drawSpriteInternal( min, max, texture, texture.getSprite( 3, 3 ) );
+            return;
+        }
 
-            // left, right | |
-            drawSpriteInternal( min, max, texture, texture.getSprite( 0, 1 ) );
-            drawSpriteInternal( min, max, texture, texture.getSprite( 3, 1 ) );
-        } else
-            drawRectInternal( min, max );
+        final Vector2 pos_stop = location.add(dimensions);
+        final float half_height = dimensions.getY() / 2;
+        final Vector2 center_width = new Vector2(dimensions.getX() - 2.f * half_height, half_height);
+
+        // top *-*
+        drawSpriteInternal( location, new Vector2(half_height), texture, texture.getSprite( 0, 0 ) );
+        drawSpriteInternal( location.add( half_height, 0.f), center_width, texture, texture.getSprite( 1, 0 ) );
+        drawSpriteInternal( pos_stop.sub( half_height, dimensions.getY( ) ), new Vector2( half_height ), texture, texture.getSprite( 3, 0 ) );
+
+        // bottom *-*
+        drawSpriteInternal( location.add( 0.f, half_height ), new Vector2( half_height ), texture, texture.getSprite( 0, 3 ) );
+        drawSpriteInternal( location.add( half_height, half_height ), center_width, texture, texture.getSprite( 1, 3 ) );
+        drawSpriteInternal( pos_stop.sub( half_height ), new Vector2( half_height ), texture, texture.getSprite( 3, 3 ) );
+
+        if ( is_over )
+            m_graphics.drawRect( (int)location.getX( ), (int)location.getY( ), (int)dimensions.getX( ), (int)dimensions.getY( ) );
     }
 
-    public Rectangle drawButton( String text, Vector2 min, Vector2 max, Color color ) {
-        drawButtonBorders( min, max );
-        drawTextCentered( text, min, max, color );
+    public void drawButton( String text, Vector2 location, Vector2 dimensions, boolean is_over ) {
+        final Color color = m_graphics.getColor( );
 
-        return new Rectangle( getPosition( min ), max );
+        drawButton( text, location, dimensions, color, is_over );
+    }
+
+    public void drawButton( String text, Vector2 location, Vector2 dimensions, Color color, boolean is_over ) {
+        drawBorders( location, dimensions, color, is_over );
+        drawTextCentered( text, location, dimensions, color );
     }
 
     private Vector2 getPosition( Vector2 location ) { return m_origin.add( location ); }
+
+    public Rectangle getHitbox( Vector2 location, Vector2 dimensions ) {
+        final Vector2 position = getPosition( location );
+
+        return new Rectangle( position, dimensions );
+    }
 
 }

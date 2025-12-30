@@ -2,6 +2,9 @@ package utils;
 
 public class Vector2 {
 
+    public static final Vector2 Zero = new Vector2( );
+    public static final Vector2 One = new Vector2( 1.f );
+
     private float m_x;
     private float m_y;
 
@@ -30,11 +33,27 @@ public class Vector2 {
         m_y = y;
     }
 
+    public Vector2 add( float scalar ) {
+        return add( scalar, scalar );
+    }
+
+    public Vector2 add( float x, float y ) {
+        return new Vector2( m_x + x, m_y + y );
+    }
+
     public Vector2 add( Vector2 other ) {
         if ( other == null )
             return new Vector2( this );
 
         return new Vector2( m_x + other.m_x, m_y + other.m_y );
+    }
+
+    public Vector2 sub( float scalar ) {
+        return sub( scalar, scalar );
+    }
+
+    public Vector2 sub( float x, float y ) {
+        return new Vector2( m_x - x, m_y - y );
     }
 
     public Vector2 sub( Vector2 other ) {
