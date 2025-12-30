@@ -1,4 +1,4 @@
-import utils.Golbals;
+import utils.Globals;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,17 +6,17 @@ import java.awt.*;
 public class Main {
 
     public static void main( String[] args ) {
-        JFrame frame = new JFrame( Golbals.WIN_TITLE );
-        Game game    = new Game( );
+        Game game     = new Game( );
+        Window window = new Window( game );
 
-        Container pane = frame.getContentPane( );
-        pane.add( game );
-        pane.addKeyListener( game );
-        pane.addMouseListener( game );
+        window.pack( );
+        window.setVisible( true );
 
-        frame.pack( );
-        frame.setVisible( true );
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        Timer timer = new Timer(
+                1000 / Globals.TARGET_FPS,
+                e -> { window.repaint( ); }
+        );
+        timer.start( );
     }
 
 }

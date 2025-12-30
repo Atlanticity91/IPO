@@ -1,5 +1,9 @@
 package inputs;
 
+import utils.Vector2;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -7,13 +11,14 @@ public class GameInputManager {
 
     private GameInputHandler m_keys;
     private GameInputHandler m_buttons;
-    private boolean m_is_locked;
+    private GameMouseLocator m_mouse_locator;
+    private long m_delta_time = 0;
+    private boolean m_is_locked = false;
 
     public GameInputManager( ) {
-        m_is_locked = false;
-
         m_keys = new GameInputHandler( );
         m_buttons = new GameInputHandler( );
+        m_mouse_locator = new GameMouseLocator( );
     }
 
     public GameInputManager addKey( int key ) {
@@ -42,6 +47,16 @@ public class GameInputManager {
         m_buttons.push( button_code, is_pressed );
     }
 
+    public void notifyMouseMoved( MouseEvent mouse_event, JPanel panel ) {
+        Point mouse_position = mouse_event.getPoint( );
+
+        SwingUtilities.convertPointFromScreen( mouse_position, panel );
+
+        m_mouse_locator.notify( mouse_position );
+    }
+
+    public void setDeltaTime( long delta_time ) { m_delta_time = delta_time; }
+
     public void lock( ) { m_is_locked = true; }
 
     public void unlock( ) { m_is_locked = false; }
@@ -65,7 +80,10 @@ public class GameInputManager {
         return m_buttons.isHandle( button, input_state );
     }
 
-    public void getMouseLocation( ) {
-    }
+    public Vector2 getMouseLocation( ) { return m_mouse_locator.getLocation( ); }
+
+    public Vector2 getMouseDirection( ) { return m_mouse_locator.getDirection( ); }
+
+    public long getDeltaTime( ) { return m_delta_time; }
 
 }

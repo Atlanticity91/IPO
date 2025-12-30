@@ -1,8 +1,6 @@
 package entities;
 
-import utils.GameRenderManager;
-
-import java.awt.*;
+import graphics.GameRenderManager;
 
 public class GameEntityManager {
 
