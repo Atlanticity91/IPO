@@ -2,7 +2,6 @@ package terrain;
 
 import entities.GameEntityManager;
 import inputs.GameInputManager;
-import utils.GameState;
 import utils.GameStateManager;
 import utils.Vector2;
 
@@ -11,7 +10,7 @@ import java.awt.*;
 public class GameTileOutput extends GameTileInteractable {
 
     public GameTileOutput( Vector2 location, Vector2 dimensions, Color color ) {
-        super( location, dimensions, color );
+        super( location, dimensions, color, true );
     }
 
     @Override
@@ -21,8 +20,8 @@ public class GameTileOutput extends GameTileInteractable {
             GameEntityManager entity_manager,
             GameTilemap tilemap
     ) {
-        if ( getEntity( ) != null )
-            state_manager.set( GameState.WinScreen );
+        if ( getEntity( ) instanceof Object )
+            state_manager.win( );
     }
 
 }

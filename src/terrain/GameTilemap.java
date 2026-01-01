@@ -9,6 +9,7 @@ import utils.Globals;
 import utils.Vector2;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GameTilemap {
 
@@ -34,7 +35,7 @@ public class GameTilemap {
         m_tile_dimensions = tile_dimensions;
     }
 
-    public void spawnTile( char tile_type, int column, int row, Object entity ) {
+    public GameTile spawnTile( char tile_type, int column, int row ) {
         final Vector2 location = new Vector2( column * m_tile_dimensions, row * m_tile_dimensions );
         final Vector2 dimensions = new Vector2( m_tile_dimensions );
         GameTile tile = null;
@@ -47,14 +48,13 @@ public class GameTilemap {
             default : break;
         }
 
-        if ( tile == null )
-            return;
+        if ( tile != null )
+            m_tiles[ row * m_columns + column ] = tile;
 
-        m_tiles[ row * m_columns + column ] = tile;
-
-        if ( tile instanceof GameTileInteractable )
-            ((GameTileInteractable)tile).onEnter( entity );
+        return tile;
     }
+
+    public void clear( ) { m_tiles = null; }
 
     public void tick(
             GameStateManager state_manager,
@@ -65,8 +65,8 @@ public class GameTilemap {
             return;
 
         for ( GameTile tile : m_tiles ) {
-            if ( tile instanceof GameTileInteractable )
-                ((GameTileInteractable)tile).tick( state_manager, input_manager, entity_manager, this );
+            if ( tile instanceof GameTileTickable tickable )
+                tickable.tick( state_manager, input_manager, entity_manager, this );
         }
     }
 
@@ -80,9 +80,17 @@ public class GameTilemap {
             if ( tile != null )
                 tile.display( render_manager );
         }
+
+        render_manager.setOrigin( 0.f, 0.f );
     }
 
     public Vector2 getOrigin( ) { return m_origin; }
+
+    public int getColumns( ) { return m_columns; }
+
+    public int getRows( ) { return m_rows; }
+
+    public Vector2 getTileDimensions( ) { return new Vector2( m_tile_dimensions ); }
 
     private Vector2 getLocationAt( Vector2 location, GameDirection direction ) {
         return switch ( direction ) {
@@ -102,6 +110,8 @@ public class GameTilemap {
         return getTileAt( location, GameDirection.None );
     }
 
+    public GameTile getTile( int x, int y ) { return m_tiles[ y * m_columns + x ]; }
+
     public GameTile getTileAt( Vector2 location, GameDirection direction ) {
         final Vector2 adjust_pos = location.sub( m_origin ).div( m_tile_dimensions );
         final Vector2 tile_pos = getLocationAt( adjust_pos, direction );
@@ -111,7 +121,21 @@ public class GameTilemap {
         if ( x < 0 || x >= m_columns || y < 0 || y > m_rows)
             return null;
 
-        return m_tiles[ y * m_columns + x ];
+        return getTile( x, y );
+    }
+
+    public <T extends GameTile> ArrayList<T> getAllTiles( Class<T> type, GameTile current_tile ) {
+        if ( m_tiles == null )
+            return null;
+
+        ArrayList<T> tile_list = new ArrayList<>( );
+
+        for ( GameTile tile : m_tiles ) {
+            if ( type.isInstance( tile ) && tile != current_tile )
+                tile_list.add( type.cast( tile ) );
+        }
+
+        return tile_list;
     }
 
 }

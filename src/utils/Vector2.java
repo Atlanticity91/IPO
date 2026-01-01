@@ -124,7 +124,10 @@ public class Vector2 {
         return div( mag );
     }
 
-    public boolean isIn( Rectangle rectangle ) {
+    public boolean isIn( Hitbox rectangle ) {
+        if ( rectangle == null )
+            return false;
+
         final Vector2 min = rectangle.getMin( );
         final Vector2 max = rectangle.getMax( );
 

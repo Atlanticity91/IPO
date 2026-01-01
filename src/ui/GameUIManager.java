@@ -30,7 +30,6 @@ public class GameUIManager {
     ) {
         final GameState old_state = state_manager.get( );
 
-        render_manager.setOrigin( 0.f, 0.f );
         m_screen.display( state_manager, input_manager, render_manager );
 
         final GameState new_state = state_manager.get( );

@@ -7,17 +7,30 @@ import utils.Vector2;
 
 import java.awt.*;
 
-public abstract class GameTileInteractable extends GameTile {
+public abstract class GameTileInteractable extends GameTile implements GameTileTickable {
 
     private Object m_entity;
 
-    public GameTileInteractable( Vector2 location, Vector2 dimensions, Color color ) {
-        super( location, dimensions, color );
+    public GameTileInteractable( Vector2 location, Vector2 dimensions, Color color, boolean is_traversable ) {
+        super( is_traversable, location, dimensions, color );
 
         m_entity = null;
     }
 
-    public void onEnter( Object entity ) { m_entity = entity; }
+    protected void setEntity( Object entity ) { m_entity = entity; }
+
+    public void onEnter(
+            GameStateManager state_manager,
+            GameTilemap tilemap,
+            GameTileInteractable previous,
+            Object entity,
+            Vector2 offset
+    ) {
+        if ( previous != null )
+            previous.onLeave( );
+
+        m_entity = entity;
+    }
 
     public void onLeave( ) { m_entity = null; }
 
@@ -27,9 +40,6 @@ public abstract class GameTileInteractable extends GameTile {
             GameEntityManager entity_manager,
             GameTilemap tilemap
     );
-
-    @Override
-    public boolean isTraversable( ) { return true; }
 
     public Object getEntity( ) { return m_entity; }
 

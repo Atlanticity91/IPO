@@ -88,6 +88,9 @@ public class GameUIScreenPlay extends GameUIScreen {
         if ( state_manager.getLiveCount( ) < 0 )
             state_manager.set( GameState.LoseScreen );
 
+        if ( state_manager.getHasWin( ) )
+            state_manager.set( GameState.WinScreen );
+
         if ( input_manager.isKey( KeyEvent.VK_ESCAPE, GameInputState.Pressed ) )
             state_manager.set( GameState.SelectionScreen );
     }

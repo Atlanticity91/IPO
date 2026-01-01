@@ -4,7 +4,7 @@ import inputs.GameInputManager;
 import inputs.GameInputState;
 import graphics.GameRenderManager;
 import utils.GameStateManager;
-import utils.Rectangle;
+import utils.Hitbox;
 import utils.Vector2;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ public abstract class GameUIScreen {
             Vector2 position,
             Vector2 dimension
     ) {
-        final Rectangle hitbox = render_manager.getHitbox( position, dimension );
+        final Hitbox hitbox = render_manager.getHitbox( position, dimension );
         final boolean is_over = input_manager.getMouseLocation( ).isIn( hitbox );
         final Color color = is_over ? Color.black : Color.gray;
 

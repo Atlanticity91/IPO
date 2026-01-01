@@ -1,13 +1,20 @@
 package utils;
 
-public class Rectangle {
+public class Hitbox {
 
     private final Vector2 m_min;
     private final Vector2 m_max;
 
-    public Rectangle( Vector2 position, Vector2 dimensions ) {
+    public Hitbox( Vector2 position, Vector2 dimensions ) {
         m_min = position;
         m_max = position.add( dimensions );
+    }
+
+    public Hitbox move( Vector2 offset ) {
+        m_min.add( offset );
+        m_max.add( offset );
+
+        return this;
     }
 
     @Override

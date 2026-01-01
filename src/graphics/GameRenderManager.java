@@ -1,6 +1,6 @@
 package graphics;
 
-import utils.Rectangle;
+import utils.Hitbox;
 import utils.Vector2;
 
 import java.awt.*;
@@ -194,10 +194,10 @@ public class GameRenderManager {
 
     private Vector2 getPosition( Vector2 location ) { return m_origin.add( location ); }
 
-    public Rectangle getHitbox( Vector2 location, Vector2 dimensions ) {
+    public Hitbox getHitbox(Vector2 location, Vector2 dimensions ) {
         final Vector2 position = getPosition( location );
 
-        return new Rectangle( position, dimensions );
+        return new Hitbox( position, dimensions );
     }
 
 }

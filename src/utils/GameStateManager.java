@@ -1,28 +1,55 @@
 package utils;
 
 import entities.GameEntityManager;
+import terrain.GameTile;
+import terrain.GameTileInteractable;
 import terrain.GameTilemap;
 
 import java.io.InputStream;
+import java.util.Random;
 import java.util.Scanner;
 
 public class GameStateManager {
 
     private GameState m_state = GameState.MenuScreen;
+    private Random m_random;
     private GameTilemap m_tilemap;
     private GameEntityManager m_entity_manager;
     private String m_level_name = "Reduxma";
     private String m_level_time = "";
     private int m_live_count = Globals.MAX_LIVE_COUNT;
+    private boolean m_has_win = false;
 
     public GameStateManager( GameTilemap tilemap, GameEntityManager entity_manager ) {
+        m_random = new Random( );
         m_tilemap = tilemap;
         m_entity_manager = entity_manager;
+    }
+
+    public int randInt( int min, int max ) { return m_random.nextInt( min, max ); }
+
+    public GameTile randTile( GameTile current_tile ) {
+        final int columns = m_tilemap.getColumns( ) - 2;
+        final int rows = m_tilemap.getRows( ) - 2;
+
+        int x = randInt( 1, columns );
+        int y = randInt( 1, rows );
+        GameTile tile = m_tilemap.getTile( x, y );
+
+        while ( !tile.isTraversable( ) || tile == current_tile ) {
+            x = randInt( 1, columns );
+            y = randInt( 1, rows );
+            tile = m_tilemap.getTile( x, y );
+        }
+
+        return tile;
     }
 
     public void set( GameState state ) { m_state = state; }
 
     public void setLevelTime( String time ) { m_level_time = time; }
+
+    public void win( ) { m_has_win = true; }
 
     public void addLive( ) { m_live_count += 1; }
 
@@ -47,6 +74,7 @@ public class GameStateManager {
         m_level_name = getLevelName( path );
         m_level_time = "00:00";
         m_live_count = Globals.MAX_LIVE_COUNT;
+        m_has_win = false;
 
         InputStream is = getClass( ).getResourceAsStream( path );
 
@@ -76,7 +104,10 @@ public class GameStateManager {
                 final char tile_type = line.charAt( x );
                 final Object entity = null;//m_entity_manager.spawnEntity( tile_type, x * dimensions, y * dimensions, dimensions );
 
-                m_tilemap.spawnTile( tile_type, x, y, entity );
+                GameTile tile = m_tilemap.spawnTile( tile_type, x, y );
+
+                if ( tile instanceof GameTileInteractable interactable )
+                    interactable.onEnter( this, m_tilemap, null, entity, Vector2.Zero );
             }
 
             y += 1;
@@ -94,6 +125,8 @@ public class GameStateManager {
     public String getLevelTime( ) { return m_level_time; }
 
     public int getLiveCount( ) { return m_live_count; }
+
+    public boolean getHasWin( ) { return m_has_win; }
 
     public boolean is( GameState state ) { return m_state == state; }
 

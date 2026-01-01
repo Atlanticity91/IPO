@@ -2,23 +2,16 @@ package terrain;
 
 import entities.GameEntityManager;
 import inputs.GameInputManager;
-import utils.GameDirection;
 import utils.GameStateManager;
 import utils.Vector2;
 
 import java.awt.*;
 
-public class GameTileEmitter extends GameTileInteractable {
+public class GameTileHole extends GameTileInteractable {
 
-    private GameDirection m_direction;
-
-    public GameTileEmitter( Vector2 location, Vector2 dimensions, GameDirection direction ) {
-        super(  location, dimensions, Color.orange, false );
-
-        m_direction = direction;
+    public GameTileHole(Vector2 location, Vector2 dimensions ) {
+        super( location, dimensions, Color.GREEN, true );
     }
-
-    protected void setDirection( GameDirection direction ) { m_direction = direction; }
 
     @Override
     public void onEnter(
@@ -28,10 +21,14 @@ public class GameTileEmitter extends GameTileInteractable {
             Object entity,
             Vector2 offset
     ) {
-        if ( entity instanceof Object laser ) {
-            setEntity( entity );
-            //laser.trace( tilemap, m_direction );
-        }
+        if ( entity == null || previous == null )
+            return;
+
+        if ( entity instanceof Object )
+            state_manager.subLive( );
+
+        final Vector2 location_offset = tilemap.getTileDimensions( ).sub( 0.f /*entity.getDimensions( )*/ ).div( .5f );
+        //entity.setLocation( previous.getLocation( ).add( location_offset ) );
     }
 
     @Override
@@ -42,7 +39,5 @@ public class GameTileEmitter extends GameTileInteractable {
             GameTilemap tilemap
     ) {
     }
-
-    public GameDirection getDirection( ) { return m_direction; }
 
 }

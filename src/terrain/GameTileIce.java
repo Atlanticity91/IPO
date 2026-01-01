@@ -9,8 +9,32 @@ import java.awt.*;
 
 public class GameTileIce extends GameTileInteractable {
 
-    public GameTileIce( Vector2 location, Vector2 dimensions, Color color ) {
-        super( location, dimensions, color );
+    private float m_slippery_factor = 0.025f;
+
+    public GameTileIce( Vector2 location, Vector2 dimensions ) {
+        super( location, dimensions, Color.blue, true );
+    }
+
+    @Override
+    public void onEnter(
+            GameStateManager state_manager,
+            GameTilemap tilemap,
+            GameTileInteractable previous,
+            Object entity,
+            Vector2 offset
+    ) {
+        super.onEnter( state_manager, tilemap, previous, entity, offset );
+
+        //entity.setSlipperyFactor( m_slippery_factor );
+    }
+
+    @Override
+    public void onLeave( ) {
+        //GameEntity entity = getEntity( );
+        //if ( entity != null )
+        //entity.setSlipperyFactor( 0.f );
+
+        super.onLeave( );
     }
 
     @Override

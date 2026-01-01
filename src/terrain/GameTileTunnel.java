@@ -8,17 +8,15 @@ import utils.Vector2;
 
 import java.awt.*;
 
-public class GameTileEmitter extends GameTileInteractable {
+public class GameTileTunnel extends GameTileInteractable {
 
-    private GameDirection m_direction;
+    private final GameDirection m_direction;
 
-    public GameTileEmitter( Vector2 location, Vector2 dimensions, GameDirection direction ) {
-        super(  location, dimensions, Color.orange, false );
+    public GameTileTunnel(Vector2 location, Vector2 dimensions, GameDirection direction ) {
+        super( location, dimensions, Color.yellow, true );
 
         m_direction = direction;
     }
-
-    protected void setDirection( GameDirection direction ) { m_direction = direction; }
 
     @Override
     public void onEnter(
@@ -28,10 +26,19 @@ public class GameTileEmitter extends GameTileInteractable {
             Object entity,
             Vector2 offset
     ) {
-        if ( entity instanceof Object laser ) {
-            setEntity( entity );
-            //laser.trace( tilemap, m_direction );
-        }
+        super.onEnter( state_manager, tilemap, previous, entity, offset );
+
+        //if ( entity instanceof GameEntityPlayer player )
+        //player.setAvailableDirection( m_direction );
+    }
+
+    @Override
+    public void onLeave( ) {
+        //GameEntity entity = getEntity( );
+        //if ( entity instanceof GameEntityPlayer player )
+        //player.setAvailableDirection( GameDirection.None );
+
+        super.onLeave( );
     }
 
     @Override
