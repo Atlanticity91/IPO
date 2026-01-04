@@ -29,14 +29,14 @@ public class GameTileTunnel extends GameTileInteractable {
         super.onEnter( state_manager, tilemap, previous, entity, offset );
 
         //if ( entity instanceof GameEntityPlayer player )
-        //player.setAvailableDirection( m_direction );
+        //player.setLockDirection( m_direction );
     }
 
     @Override
     public void onLeave( ) {
         //GameEntity entity = getEntity( );
         //if ( entity instanceof GameEntityPlayer player )
-        //player.setAvailableDirection( GameDirection.None );
+        //player.setLockDirection( GameDirection.None );
 
         super.onLeave( );
     }

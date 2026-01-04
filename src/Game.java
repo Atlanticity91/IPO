@@ -124,10 +124,11 @@ public class Game
 
         m_render_manager.prepare( graphics );
 
-        if ( m_state_manager.is( GameState.PlayScreen ) )
-            m_tilemap.tick( m_state_manager, m_input_manager, m_entities );
+        if ( m_state_manager.is( GameState.PlayScreen ) ) {
+            m_tilemap.tick(m_state_manager, m_input_manager, m_entities);
+            m_tilemap.display(m_render_manager);
+        }
 
-        m_tilemap.display( m_render_manager );
         m_entities.display( m_render_manager );
         m_ui.display( m_state_manager, m_input_manager, m_render_manager );
 
