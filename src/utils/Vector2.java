@@ -105,6 +105,14 @@ public class Vector2 {
         return new Vector2( -m_x, -m_y );
     }
 
+    public Vector2 negateX( ) {
+        return new Vector2( -m_x, m_y );
+    }
+
+    public Vector2 negateY( ) {
+        return new Vector2( m_x, -m_y );
+    }
+
     public Vector2 rotate( float degrees ) {
         final float radians = degrees * Globals.TO_RADS;
         final float cos = (float)Math.cos( radians );
@@ -117,7 +125,7 @@ public class Vector2 {
     }
 
     public static Vector2 direction( Vector2 src, Vector2 dst ) {
-        return src.sub( dst ).normalize( );
+        return dst.sub( src ).normalize( );
     }
 
     @Override
