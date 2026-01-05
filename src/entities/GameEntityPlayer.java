@@ -109,33 +109,33 @@ public class GameEntityPlayer extends GameEntity {
             }
         }
 
-//        GameTile ne = tilemap.getTileAt( location, GameDirection.Northeast);
-//        if ( ne != null ) {
-//            checkCorner(ne,
-//                    ne.getLocalHitbox().getMin().getX(),
-//                    ne.getLocalHitbox().getMax().getY());
-//        }
-//
-//        GameTile se = tilemap.getTileAt( location, GameDirection.Southeast);
-//        if ( se != null ) {
-//            checkCorner(se,
-//                    se.getLocalHitbox().getMin().getX(),
-//                    se.getLocalHitbox().getMin().getY());
-//        }
-//
-//        GameTile sw = tilemap.getTileAt( location, GameDirection.Southwest);
-//        if ( sw != null ) {
-//            checkCorner(sw,
-//                    sw.getLocalHitbox().getMax().getX(),
-//                    sw.getLocalHitbox().getMin().getY());
-//        }
-//
-//        GameTile nw = tilemap.getTileAt( location, GameDirection.Northwest);
-//        if ( nw != null ) {
-//            checkCorner(nw,
-//                    nw.getLocalHitbox().getMax().getX(),
-//                    nw.getLocalHitbox().getMax().getY());
-//        }
+        GameTile ne = tilemap.getTileAt( location, GameDirection.Northeast);
+        if ( ne != null ) {
+            checkCorner(ne,
+                    ne.getLocalHitbox().getMin().getX(),
+                    ne.getLocalHitbox().getMax().getY());
+        }
+
+        GameTile se = tilemap.getTileAt( location, GameDirection.Southeast);
+        if ( se != null ) {
+            checkCorner(se,
+                    se.getLocalHitbox().getMin().getX(),
+                    se.getLocalHitbox().getMin().getY());
+        }
+
+        GameTile sw = tilemap.getTileAt( location, GameDirection.Southwest);
+        if ( sw != null ) {
+            checkCorner(sw,
+                    sw.getLocalHitbox().getMax().getX(),
+                    sw.getLocalHitbox().getMin().getY());
+        }
+
+        GameTile nw = tilemap.getTileAt( location, GameDirection.Northwest);
+        if ( nw != null ) {
+            checkCorner(nw,
+                    nw.getLocalHitbox().getMax().getX(),
+                    nw.getLocalHitbox().getMax().getY());
+        }
     }
 
     @Override

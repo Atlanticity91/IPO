@@ -6,15 +6,14 @@ public class Hitbox {
     private final Vector2 m_max;
 
     public Hitbox( Vector2 position, Vector2 dimensions ) {
-        m_min = position;
-        m_max = position.add( dimensions );
+        Vector2 a = position;
+        Vector2 b = position.add( dimensions );
+        m_min = new Vector2( Math.min( a.getX( ), b.getX( ) ), Math.min( a.getY( ), b.getY( ) ) );
+        m_max = new Vector2( Math.max( a.getX( ), b.getX( ) ), Math.max( a.getY( ), b.getY( ) ) );
     }
 
     public Hitbox move( Vector2 offset ) {
-        m_min.add( offset );
-        m_max.add( offset );
-
-        return this;
+        return new Hitbox( m_min.add( offset ), m_max.sub( m_min ) );
     }
 
     @Override
