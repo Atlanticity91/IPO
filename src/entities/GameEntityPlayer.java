@@ -4,10 +4,7 @@ import inputs.GameInputManager;
 import terrain.GameTile;
 import terrain.GameTileInteractable;
 import terrain.GameTilemap;
-import utils.GameDirection;
-import utils.GameStateManager;
-import utils.Globals;
-import utils.Vector2;
+import utils.*;
 
 import java.awt.*;
 
@@ -77,7 +74,7 @@ public class GameEntityPlayer extends GameEntity {
         final Vector2 location = getLocation( );
 
         GameTile north = tilemap.getTileAt( location, GameDirection.North);
-        if (!north.isTraversable()) {
+        if ( north != null && !north.isTraversable()) {
             float top = north.getLocalHitbox().getMax().getY() + getRadius();
             if (top >= location.getY()) {
                 setLocation( new Vector2(location.getX(), top) );
@@ -86,7 +83,7 @@ public class GameEntityPlayer extends GameEntity {
         }
 
         GameTile east = tilemap.getTileAt( location, GameDirection.East);
-        if (!east.isTraversable()) {
+        if ( east != null && !east.isTraversable()) {
             float right = east.getLocalHitbox().getMin().getX() - getRadius();
             if (right <= location.getX()) {
                 setLocation( new Vector2(right, location.getY()) );
@@ -95,7 +92,7 @@ public class GameEntityPlayer extends GameEntity {
         }
 
         GameTile south = tilemap.getTileAt( location, GameDirection.South);
-        if (!south.isTraversable()) {
+        if ( south != null && !south.isTraversable()) {
             float bottom = south.getLocalHitbox().getMin().getY() - getRadius();
             if (bottom <= location.getY()) {
                 setLocation( new Vector2( location.getX(), bottom) );
@@ -104,7 +101,7 @@ public class GameEntityPlayer extends GameEntity {
         }
 
         GameTile west = tilemap.getTileAt( location, GameDirection.West);
-        if (!west.isTraversable()) {
+        if ( west != null && !west.isTraversable()) {
             float left = west.getLocalHitbox().getMax().getX() + getRadius();
             if (left <= location.getX()) {
                 setLocation( new Vector2(left, location.getY()) );
@@ -113,24 +110,32 @@ public class GameEntityPlayer extends GameEntity {
         }
 
         GameTile ne = tilemap.getTileAt( location, GameDirection.Northeast);
-        checkCorner(ne,
-                ne.getLocalHitbox().getMin().getX(),
-                ne.getLocalHitbox().getMax().getY());
+        if ( ne != null ) {
+            checkCorner(ne,
+                    ne.getLocalHitbox().getMin().getX(),
+                    ne.getLocalHitbox().getMax().getY());
+        }
 
         GameTile se = tilemap.getTileAt( location, GameDirection.Southeast);
-        checkCorner(se,
-                se.getLocalHitbox().getMin().getX(),
-                se.getLocalHitbox().getMin().getY());
+        if ( se != null ) {
+            checkCorner(se,
+                    se.getLocalHitbox().getMin().getX(),
+                    se.getLocalHitbox().getMin().getY());
+        }
 
         GameTile sw = tilemap.getTileAt( location, GameDirection.Southwest);
-        checkCorner(sw,
-                sw.getLocalHitbox().getMax().getX(),
-                sw.getLocalHitbox().getMin().getY());
+        if ( sw != null ) {
+            checkCorner(sw,
+                    sw.getLocalHitbox().getMax().getX(),
+                    sw.getLocalHitbox().getMin().getY());
+        }
 
         GameTile nw = tilemap.getTileAt( location, GameDirection.Northwest);
-        checkCorner(nw,
-                nw.getLocalHitbox().getMax().getX(),
-                nw.getLocalHitbox().getMax().getY());
+        if ( nw != null ) {
+            checkCorner(nw,
+                    nw.getLocalHitbox().getMax().getX(),
+                    nw.getLocalHitbox().getMax().getY());
+        }
     }
 
     @Override
@@ -143,7 +148,7 @@ public class GameEntityPlayer extends GameEntity {
         final Vector2 old_location = getLocation( );
         final GameTile current_tile = tilemap.getTile( old_location );
 
-        //checkTileCollision( tilemap );
+        checkTileCollision( tilemap );
 
         Vector2 dir = m_velocity.normalize( );
 
@@ -155,10 +160,10 @@ public class GameEntityPlayer extends GameEntity {
         if ( isMouseIn( input_manager.getMouseLocation( ).sub( tilemap.getOrigin( ) ) ) )
             m_velocity = m_velocity.add( input_manager.getMouseDirection( ).scale( Globals.ACCELERATION_FACTOR ) );
 
-        if (m_velocity.magnitude() >= Globals.MAX_SPEED)
-            m_velocity = m_velocity.normalize().scale(Globals.MAX_SPEED);
+        if ( m_velocity.magnitude( ) >= Globals.MAX_SPEED )
+            m_velocity = m_velocity.normalize( ).scale( Globals.MAX_SPEED );
 
-        move( m_velocity );
+        move( m_velocity.add( m_velocity.scale( m_slippery_factor ) ) );
 
         final GameTile new_tile = tilemap.getTile( getLocation( ) );
 
@@ -169,8 +174,8 @@ public class GameEntityPlayer extends GameEntity {
         }
     }
 
-    private Vector2 getCircleCenter( Vector2 location, Vector2 dimenions ) {
-        final float half_diameter = dimenions.getX( ) * .5f;
+    private Vector2 getCircleCenter( Vector2 location, Vector2 dimensions ) {
+        final float half_diameter = dimensions.getX( ) * .5f;
 
         return new Vector2(
                 location.getX( ) + half_diameter,
@@ -181,20 +186,47 @@ public class GameEntityPlayer extends GameEntity {
     @Override
     public Vector2 doCollide( GameEntity entity ) {
         final Vector2 player_center = getCircleCenter( getLocation(), getDimensions());
+        final float radius = getRadius( );
 
         if ( entity instanceof GameEntityBullet bullet ) {
             final Vector2 bullet_center = getCircleCenter( bullet.getLocation(), bullet.getDimensions() );
             final float dist = bullet_center.sub( player_center ).magnitudeSq( );
-            final float radius = getDimensions().getX() + bullet.getDimensions().getX();
             final float penetration = ( radius * radius ) - dist;
 
             if ( penetration > 0.f ) {
-                if ( dist > 0.0001f )
+                if ( dist > .0001f )
                     return bullet_center.sub( player_center ).div( dist ).scale( penetration );
                 else
                     return new Vector2( 0.f, penetration );
             }
         } else if ( entity instanceof GameEntityLaser laser ) {
+            final Vector2 min = laser.getLocation();
+            final Vector2 max = min.add( laser.getDimensions( ) );
+            final Vector2 closet = new Vector2(
+                    Math.max( min.getX( ), Math.min( player_center.getX( ), max.getX( ) ) ),
+                    Math.max( min.getY( ), Math.min( player_center.getY( ), max.getY( ) ) )
+            );
+            final Vector2 dist_vector = player_center.sub( closet );
+            final float dist = dist_vector.magnitudeSq( );
+            final float penetration = radius - dist;
+
+            if ( penetration > 0.f ) {
+                if ( dist > .0001f )
+                    return dist_vector.div( dist ).scale( penetration );
+                else {
+                    final float dist_left   = player_center.getX() - min.getX( );
+                    final float dist_right  = max.getX( ) - player_center.getX( );
+                    final float dist_bottom = player_center.getY( ) - min.getY( );
+                    final float dist_top    = max.getY( ) - player_center.getY( );
+                    final float push_x = (dist_left < dist_right) ? dist_left : -dist_right;
+                    final float push_y = (dist_bottom < dist_top) ? dist_bottom : -dist_top;
+
+                    if ( Math.abs( push_x ) < Math.abs( push_y ) )
+                        return new Vector2( push_x, 0.f);
+                    else
+                        return new Vector2( 0.f, push_y );
+                }
+            }
         }
 
         return null;
