@@ -111,12 +111,12 @@ public class GameTilemap {
     public GameTile getTile( int x, int y ) { return m_tiles[ y * m_columns + x ]; }
 
     public GameTile getTileAt( Vector2 location, GameDirection direction ) {
-        //final Vector2 adjust_pos = location.div( m_tile_dimensions );
-        final Vector2 tile_pos = getLocationAt( location, direction );
+        final Vector2 adjust_pos = location.div( m_tile_dimensions );
+        final Vector2 tile_pos = getLocationAt( adjust_pos, direction );
         final int x = (int)tile_pos.getX( );
         final int y = (int)tile_pos.getY( );
 
-        if ( x < 0 || x >= m_columns || y < 0 || y > m_rows)
+        if ( x < 0 || x >= m_columns || y < 0 || y >= m_rows )
             return null;
 
         return getTile( x, y );

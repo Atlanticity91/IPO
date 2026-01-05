@@ -148,6 +148,7 @@ public class GameEntityPlayer extends GameEntity {
         final Vector2 old_location = getLocation( );
         final GameTile current_tile = tilemap.getTile( old_location );
 
+
         checkTileCollision( tilemap );
 
         Vector2 dir = m_velocity.normalize( );
