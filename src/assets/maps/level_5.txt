@@ -6,14 +6,14 @@
 #   H     /                \   #
 #   H                          #
 #   H                          #
-# T H                          #
-#   H                          #
+# T H##       G       G        #
+#   H#G                        #
 #HHHHHHHHH                     #
-#             /            /   #
-# T                            #
-#                              #
-#     J          O             #
-#                              #
-# v                            #
-#         l                    #
+#IIIIIIIII    /            /   #
+#ITIIIIIII  G                  #
+#IIIIIIIII                     #
+#IIIIIJIII       O             #
+#IIIIIIIII  G                  #
+#IvIIIIIII                     #
+#IIIIIIIIIl                    #
 ################################
