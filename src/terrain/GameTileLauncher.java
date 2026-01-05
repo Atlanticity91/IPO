@@ -2,6 +2,7 @@ package terrain;
 
 import entities.GameEntityBullet;
 import entities.GameEntityManager;
+import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import utils.GameDirection;
 import utils.GameStateManager;
@@ -45,6 +46,13 @@ public class GameTileLauncher extends GameTile implements GameTileTickable {
         entity_manager.addEntity( bullet );
 
         m_spawn_bullet = false;
+    }
+
+    @Override
+    public void display( GameRenderManager render_manager ){
+        super.display( render_manager );
+
+        render_manager.drawSprite( "launcher", getLocation( ), getDimensions( ), 0, 0 );
     }
 
     @Override

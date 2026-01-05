@@ -1,5 +1,6 @@
 package terrain;
 
+import entities.GameEntityLaser;
 import entities.GameEntityManager;
 import inputs.GameInputManager;
 import inputs.GameInputState;
@@ -12,19 +13,28 @@ import java.awt.event.KeyEvent;
 
 public class GameTileMirror extends GameTileEmitter {
 
-    public GameTileMirror( Vector2 location, Vector2 dimensions, GameDirection direction ) {
+    public GameTileMirror(
+            Vector2 location,
+            Vector2 dimensions,
+            GameDirection direction
+    ) {
         super( location, dimensions, direction );
     }
 
-    private void spawnLaser( GameEntityManager entity_manager, GameTilemap tilemap ) {
-        Object laser = getEntity( );
-        //if ( laser != null )
-        //entity_manager.kill( laser );
+    private void spawnLaser(
+            GameStateManager state_manager,
+            GameEntityManager entity_manager,
+            GameTilemap tilemap
+    ) {
+        entity_manager.kill( getEntity( ) );
 
-        //laser = entity_manager.spawn<GameEntityLaser>( getLocation( ) );
-        //laser.trace( tilemap, m_direction );
+        GameEntityLaser laser = new GameEntityLaser( getLocation( ) );
 
-        //setEntity( laser );
+        entity_manager.addEntity( laser );
+        laser.trace( state_manager, tilemap, getDirection( ) );
+
+        entity_manager.addEntity( laser );
+        setEntity( laser );
     }
 
     @Override
@@ -35,7 +45,7 @@ public class GameTileMirror extends GameTileEmitter {
             GameTilemap tilemap
     ) {
         if ( getEntity( ) == null )
-            spawnLaser( entity_manager, tilemap );
+            spawnLaser( state_manager, entity_manager, tilemap );
 
         final Hitbox hitbox = getLocalHitbox( ).move( tilemap.getOrigin( ) );
 
@@ -59,7 +69,7 @@ public class GameTileMirror extends GameTileEmitter {
             }
         }
 
-        spawnLaser( entity_manager, tilemap );
+        spawnLaser( state_manager, entity_manager, tilemap );
     }
 
 }

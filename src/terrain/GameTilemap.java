@@ -42,13 +42,19 @@ public class GameTilemap {
 
         switch ( tile_type ) {
             case '#' : tile = new GameTileDecoration( location, dimensions, false ); break;
+            case 'v' :
             case ' ' : tile = new GameTileDecoration( location, dimensions, true ); break;
             case 'O' : tile = new GameTileOutput( location, dimensions, Color.cyan ); break;
-            case 'H' : break;
-            case '/' : break;
-            case '\\' : break;
+            case 'H' : tile = new GameTileHole( location, dimensions ); break;
+            case 'I' : tile = new GameTileIce( location, dimensions ); break;
+            case '/' : tile = new GameTileMirror( location, dimensions, GameDirection.West ); break;
+            case '\\' : tile = new GameTileMirror( location, dimensions, GameDirection.East ); break;
             case 'T' : tile = new GameTileTeleporter( location, dimensions, Color.orange ); break;
             case 'l' : tile = new GameTileEmitter( location, dimensions, GameDirection.North ); break;
+            case 'L' : tile = new GameTileEmitter( location, dimensions, GameDirection.South ); break;
+            case 'j' : tile = new GameTileEmitter( location, dimensions, GameDirection.East ); break;
+            case 'J' : tile = new GameTileEmitter( location, dimensions, GameDirection.West ); break;
+
             default : break;
         }
 
@@ -108,16 +114,18 @@ public class GameTilemap {
         return getTileAt( location, GameDirection.None );
     }
 
-    public GameTile getTile( int x, int y ) { return m_tiles[ y * m_columns + x ]; }
+    public GameTile getTile( int x, int y ) {
+        if ( x < 0 || x >= m_columns || y < 0 || y > m_rows )
+            return null;
+
+        return m_tiles[ y * m_columns + x ];
+    }
 
     public GameTile getTileAt( Vector2 location, GameDirection direction ) {
         final Vector2 adjust_pos = location.div( m_tile_dimensions );
         final Vector2 tile_pos = getLocationAt( adjust_pos, direction );
         final int x = (int)tile_pos.getX( );
         final int y = (int)tile_pos.getY( );
-
-        if ( x < 0 || x >= m_columns || y < 0 || y >= m_rows )
-            return null;
 
         return getTile( x, y );
     }

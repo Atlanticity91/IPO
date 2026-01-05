@@ -28,6 +28,8 @@ public abstract class GameTile {
 
     public Vector2 getLocation( ) { return m_location; }
 
+    public Vector2 getDimensions( ) { return m_dimensions; }
+
     public Hitbox getLocalHitbox( ) {
         return new Hitbox( m_location, m_dimensions );
     }

@@ -16,15 +16,13 @@ public class GameTileTeleporter extends GameTileInteractable {
         super( location, dimensions, color, true );
     }
 
-    private GameTile teleport( GameTilemap tilemap, GameTile dst, Object entity, Vector2 offset ) {
-        final Vector2 location = /*entity.getDirection( )*/ new Vector2( )
-                .scale( tilemap.getTileDimensions( ) )
-                .add( 0.f/*entity.getLocation( )*/ );
+    private GameTile teleport( GameTilemap tilemap, GameTile dst, GameEntity entity ) {
+        final Vector2 offset = entity.getDimensions( ).div( 2.f );
+        final Vector2 tile_center = dst.getLocation( ).add( tilemap.getTileDimensions( ).div( 2.f ) );
 
-        //TODO Add calculation for the position on the new tile with deplacement of 'offset'
-        //entity.setLocation( location.add( tilemap.getTileDimensions( ).scale( .5f ) ) );
+        entity.setLocation( tile_center.sub( offset ) );
 
-        return tilemap.getTile( location );
+        return dst;
     }
 
     @Override
@@ -46,9 +44,9 @@ public class GameTileTeleporter extends GameTileInteractable {
         if ( dest_list != null ) {
             final int dest_id = state_manager.randInt( 0, dest_list.size( ) );
 
-            dest = teleport( tilemap, dest_list.get( dest_id ), entity, offset );
+            dest = teleport( tilemap, dest_list.get( dest_id ), entity );
         } else
-            dest = teleport( tilemap, state_manager.randTile( this ), entity, offset );
+            dest = teleport( tilemap, state_manager.randTile( this ), entity );
 
         if ( dest instanceof GameTileInteractable interactable )
             interactable.onEnter( state_manager, tilemap, this, entity, Vector2.Zero );
@@ -66,7 +64,10 @@ public class GameTileTeleporter extends GameTileInteractable {
     }
 
     @Override
-    public void display( GameRenderManager render_manager ) {
+    public void display( GameRenderManager render_manager ){
+        super.display( render_manager );
+
+        render_manager.drawSprite( "teleport", getLocation( ), getDimensions( ), 0, 0 );
     }
 
 }

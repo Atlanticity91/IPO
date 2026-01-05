@@ -2,7 +2,9 @@ package entities;
 
 import graphics.GameRenderManager;
 import inputs.GameInputManager;
+import terrain.GameTileEmitter;
 import terrain.GameTilemap;
+import utils.GameDirection;
 import utils.GameStateManager;
 import utils.Vector2;
 
@@ -29,6 +31,11 @@ public class GameEntityManager {
 
         switch ( tile_type ) {
             case 'v' : entity = new GameEntityPlayer( location, dimensions ); break;
+            case 'l' :
+            case 'L' :
+            case 'j' :
+            case 'J' : entity = new GameEntityLaser( location ); break;
+
             default : break;
         }
 

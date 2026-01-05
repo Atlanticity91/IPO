@@ -3,6 +3,7 @@ package terrain;
 import entities.GameEntity;
 import entities.GameEntityLaser;
 import entities.GameEntityManager;
+import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import utils.GameDirection;
 import utils.GameStateManager;
@@ -30,12 +31,10 @@ public class GameTileEmitter extends GameTileInteractable {
             GameEntity entity,
             Vector2 offset
     ) {
-        if ( !( entity instanceof GameEntityLaser laser ) )
-            return;
+        super.onEnter( state_manager, tilemap, previous, entity, offset );
 
-        setEntity( entity );
-
-        laser.trace( tilemap, m_direction );
+        if ( entity instanceof GameEntityLaser laser )
+            laser.trace( state_manager, tilemap, m_direction );
     }
 
     @Override
@@ -45,6 +44,16 @@ public class GameTileEmitter extends GameTileInteractable {
             GameEntityManager entity_manager,
             GameTilemap tilemap
     ) {
+    }
+
+    @Override
+    public void display(GameRenderManager render_manager) {
+        super.display( render_manager );
+
+        if ( m_direction == GameDirection.West )
+            render_manager.drawSprite( "laser_droite", getLocation(), getDimensions( ), 0, 0 );
+        else if ( m_direction == GameDirection.East )
+            render_manager.drawSprite( "laser_gauche", getLocation(), getDimensions( ), 0, 0 );
     }
 
     public GameDirection getDirection( ) { return m_direction; }

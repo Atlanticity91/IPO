@@ -3,6 +3,7 @@ package terrain;
 import entities.GameEntity;
 import entities.GameEntityManager;
 import entities.GameEntityPlayer;
+import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import utils.GameStateManager;
 import utils.Vector2;
@@ -48,6 +49,13 @@ public class GameTileIce extends GameTileInteractable {
             GameEntityManager entity_manager,
             GameTilemap tilemap
     ) {
+    }
+
+    @Override
+    public void display( GameRenderManager render_manager ){
+        super.display( render_manager );
+
+        render_manager.drawSprite( "ice", getLocation( ), getDimensions( ), 0, 0 );
     }
 
 }

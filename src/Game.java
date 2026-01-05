@@ -59,6 +59,14 @@ public class Game
     private void loadTextures( ) {
         m_render_manager.load( "ui_borders", "/assets/ui_borders.png", 4, 4 );
         m_render_manager.load( "ui_lives", "/assets/ui_lives.png", 2, 1 );
+        m_render_manager.load( "laser_droite", "/assets/laser_droite.png", 1, 1 );
+        m_render_manager.load( "laser_gauche", "/assets/laser_gauche.png", 1, 1 );
+        m_render_manager.load( "ice", "/assets/ice.png", 1, 1 );
+        m_render_manager.load( "teleport", "/assets/teleport.png", 1, 1 );
+        m_render_manager.load( "deco", "/assets/deco.png", 1, 1 );
+        m_render_manager.load( "wall", "/assets/wall.png", 1, 1 );
+        m_render_manager.load( "launcher", "/assets/launcher.png", 1, 1 );
+        m_render_manager.load( "hole", "/assets/hole.png", 1, 1 );
 
         m_render_manager.setButtonTexture( "ui_borders" );
     }

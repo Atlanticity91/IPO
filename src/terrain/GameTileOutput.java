@@ -1,6 +1,8 @@
 package terrain;
 
 import entities.GameEntityManager;
+import entities.GameEntityPlayer;
+import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import utils.GameStateManager;
 import utils.Vector2;
@@ -20,8 +22,15 @@ public class GameTileOutput extends GameTileInteractable {
             GameEntityManager entity_manager,
             GameTilemap tilemap
     ) {
-        if ( getEntity( ) instanceof Object )
+        if ( getEntity( ) instanceof GameEntityPlayer)
             state_manager.win( );
+    }
+
+    @Override
+    public void display( GameRenderManager render_manager ) {
+        super.display( render_manager );
+
+        render_manager.drawSprite( "out", getLocation( ), getDimensions( ), 0, 0 );
     }
 
 }
