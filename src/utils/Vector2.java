@@ -33,6 +33,10 @@ public class Vector2 {
         m_y = y;
     }
 
+    public void setX( float scalar ) { m_x = scalar; }
+
+    public void setY( float scalar ) { m_y = scalar; }
+
     public Vector2 add( float scalar ) {
         return add( scalar, scalar );
     }

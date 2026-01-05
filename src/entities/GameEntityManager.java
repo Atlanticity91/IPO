@@ -4,6 +4,7 @@ import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import terrain.GameTilemap;
 import utils.GameStateManager;
+import utils.Vector2;
 
 import java.util.ArrayList;
 
@@ -15,15 +16,31 @@ public class GameEntityManager {
         m_entity_list = new ArrayList<>( );
     }
 
-    public <T extends GameEntity> void spawn( T entity ) {
-        if ( entity == null )
-            return;
+    public void clear( ) { m_entity_list.clear( ); }
 
-        entity.onSpawn( );
-        m_entity_list.add( entity );
+    public GameEntity spawnEntity(
+            char tile_type,
+            float x,
+            float y,
+            float dimensions
+    ) {
+        final Vector2 location = new Vector2( x + dimensions * .5f, y + dimensions * .5f );
+        GameEntity entity = null;
+
+        switch ( tile_type ) {
+            case 'v' : entity = new GameEntityPlayer( location, dimensions ); break;
+            default : break;
+        }
+
+        if ( entity != null ) {
+            entity.onSpawn( );
+            m_entity_list.add( entity );
+        }
+
+        return entity;
     }
 
-    public <T extends GameEntity> void kill( T entity ) {
+    public void kill( GameEntity entity ) {
         if ( entity == null )
             return;
 

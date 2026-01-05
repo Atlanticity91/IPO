@@ -74,14 +74,10 @@ public class GameTilemap {
         if ( m_tiles == null )
             return;
 
-        render_manager.setOrigin( m_origin );
-
         for ( GameTile tile : m_tiles ) {
             if ( tile != null )
                 tile.display( render_manager );
         }
-
-        render_manager.setOrigin( 0.f, 0.f );
     }
 
     public Vector2 getOrigin( ) { return m_origin; }

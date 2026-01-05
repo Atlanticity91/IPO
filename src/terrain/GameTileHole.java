@@ -1,6 +1,8 @@
 package terrain;
 
+import entities.GameEntity;
 import entities.GameEntityManager;
+import entities.GameEntityPlayer;
 import inputs.GameInputManager;
 import utils.GameStateManager;
 import utils.Vector2;
@@ -18,17 +20,19 @@ public class GameTileHole extends GameTileInteractable {
             GameStateManager state_manager,
             GameTilemap tilemap,
             GameTileInteractable previous,
-            Object entity,
+            GameEntity entity,
             Vector2 offset
     ) {
         if ( entity == null || previous == null )
             return;
 
-        if ( entity instanceof Object )
-            state_manager.subLive( );
+        if ( !( entity instanceof GameEntityPlayer ) )
+            return;
 
-        final Vector2 location_offset = tilemap.getTileDimensions( ).sub( 0.f /*entity.getDimensions( )*/ ).div( .5f );
-        //entity.setLocation( previous.getLocation( ).add( location_offset ) );
+        final Vector2 location = state_manager.getSpawnPoint( );
+
+        state_manager.subLive( );
+        entity.setLocation( location );
     }
 
     @Override

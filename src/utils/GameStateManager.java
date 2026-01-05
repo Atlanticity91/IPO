@@ -1,6 +1,8 @@
 package utils;
 
+import entities.GameEntity;
 import entities.GameEntityManager;
+import entities.GameEntityPlayer;
 import terrain.GameTile;
 import terrain.GameTileInteractable;
 import terrain.GameTilemap;
@@ -19,11 +21,13 @@ public class GameStateManager {
     private String m_level_time = "";
     private int m_live_count = Globals.MAX_LIVE_COUNT;
     private boolean m_has_win = false;
+    private Vector2 m_spawn_point;
 
     public GameStateManager( GameTilemap tilemap, GameEntityManager entity_manager ) {
         m_random = new Random( );
         m_tilemap = tilemap;
         m_entity_manager = entity_manager;
+        m_spawn_point = Vector2.Zero;
     }
 
     public int randInt( int min, int max ) { return m_random.nextInt( min, max ); }
@@ -94,6 +98,7 @@ public class GameStateManager {
         final float dimensions = getTileDimensions( columns, rows );
 
         m_tilemap.create( columns, rows, dimensions );
+        m_entity_manager.clear( );
 
         int y = 0;
 
@@ -102,7 +107,10 @@ public class GameStateManager {
 
             for ( int x = 0; x < columns; x++ ) {
                 final char tile_type = line.charAt( x );
-                final Object entity = null;//m_entity_manager.spawnEntity( tile_type, x * dimensions, y * dimensions, dimensions );
+                final GameEntity entity = m_entity_manager.spawnEntity( tile_type, x * dimensions, y * dimensions, dimensions );
+
+                if ( entity instanceof GameEntityPlayer )
+                    m_spawn_point = entity.getLocation( );
 
                 GameTile tile = m_tilemap.spawnTile( tile_type, x, y );
 
@@ -129,5 +137,7 @@ public class GameStateManager {
     public boolean getHasWin( ) { return m_has_win; }
 
     public boolean is( GameState state ) { return m_state == state; }
+
+    public Vector2 getSpawnPoint( ) { return m_spawn_point; }
 
 }

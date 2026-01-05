@@ -1,5 +1,6 @@
 package terrain;
 
+import entities.GameEntity;
 import entities.GameEntityManager;
 import graphics.GameRenderManager;
 import inputs.GameInputManager;
@@ -31,7 +32,7 @@ public class GameTileTeleporter extends GameTileInteractable {
             GameStateManager state_manager,
             GameTilemap tilemap,
             GameTileInteractable previous,
-            Object entity,
+            GameEntity entity,
             Vector2 offset
     ) {
         super.onEnter( state_manager, tilemap, previous, entity, offset );

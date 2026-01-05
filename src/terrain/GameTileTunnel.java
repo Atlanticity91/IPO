@@ -1,6 +1,8 @@
 package terrain;
 
+import entities.GameEntity;
 import entities.GameEntityManager;
+import entities.GameEntityPlayer;
 import inputs.GameInputManager;
 import utils.GameDirection;
 import utils.GameStateManager;
@@ -23,20 +25,21 @@ public class GameTileTunnel extends GameTileInteractable {
             GameStateManager state_manager,
             GameTilemap tilemap,
             GameTileInteractable previous,
-            Object entity,
+            GameEntity entity,
             Vector2 offset
     ) {
         super.onEnter( state_manager, tilemap, previous, entity, offset );
 
-        //if ( entity instanceof GameEntityPlayer player )
-        //player.setLockDirection( m_direction );
+        if ( entity instanceof GameEntityPlayer player )
+            player.setLockDirection( m_direction );
     }
 
     @Override
     public void onLeave( ) {
-        //GameEntity entity = getEntity( );
-        //if ( entity instanceof GameEntityPlayer player )
-        //player.setLockDirection( GameDirection.None );
+        GameEntity entity = getEntity( );
+
+        if ( entity instanceof GameEntityPlayer player )
+            player.setLockDirection( GameDirection.None );
 
         super.onLeave( );
     }

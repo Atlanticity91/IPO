@@ -34,12 +34,25 @@ public class GameEntityBullet extends GameEntity {
             GameTilemap tilemap,
             GameEntityManager entity_manager
     ) {
-        move( m_velocity, m_velocity );
+        Vector2 acceleration = Vector2.Zero;
+
+        switch ( m_direction ) {
+            case North: break;
+            case East: break;
+            case South: break;
+            case West: break;
+            case Northeast: break;
+            case Southeast: break;
+            case Southwest: break;
+            case Northwest : break;
+            default : break;
+        }
+
+        move( acceleration );
     }
 
     @Override
-    public void display(GameRenderManager render_manager) {
-
+    public void display( GameRenderManager render_manager ) {
     }
 
     public GameDirection getDirection( ) { return m_direction; }

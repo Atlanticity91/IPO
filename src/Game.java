@@ -125,11 +125,15 @@ public class Game
         m_render_manager.prepare( graphics );
 
         if ( m_state_manager.is( GameState.PlayScreen ) ) {
-            m_tilemap.tick(m_state_manager, m_input_manager, m_entities);
-            m_tilemap.display(m_render_manager);
+            m_tilemap.tick( m_state_manager, m_input_manager, m_entities );
+            m_entities.tick( m_state_manager, m_input_manager, m_tilemap );
+
+            m_render_manager.setOrigin( m_tilemap.getOrigin( ) );
+            m_tilemap.display( m_render_manager );
+            m_entities.display( m_render_manager );
+            m_render_manager.setOrigin( 0.f, 0.f );
         }
 
-        m_entities.display( m_render_manager );
         m_ui.display( m_state_manager, m_input_manager, m_render_manager );
 
         m_input_manager.tick( );

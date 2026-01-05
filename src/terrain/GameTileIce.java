@@ -1,5 +1,6 @@
 package terrain;
 
+import entities.GameEntity;
 import entities.GameEntityManager;
 import inputs.GameInputManager;
 import utils.GameStateManager;
@@ -20,19 +21,19 @@ public class GameTileIce extends GameTileInteractable {
             GameStateManager state_manager,
             GameTilemap tilemap,
             GameTileInteractable previous,
-            Object entity,
+            GameEntity entity,
             Vector2 offset
     ) {
         super.onEnter( state_manager, tilemap, previous, entity, offset );
 
-        //entity.setSlipperyFactor( m_slippery_factor );
+        //enstity.setSlipperyFactor( m_slippery_factor );
     }
 
     @Override
     public void onLeave( ) {
-        //GameEntity entity = getEntity( );
-        //if ( entity != null )
-        //entity.setSlipperyFactor( 0.f );
+        GameEntity entity = getEntity( );
+
+        //if ( entity != null ) entity.setSlipperyFactor( 0.f );
 
         super.onLeave( );
     }

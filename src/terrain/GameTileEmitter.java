@@ -1,5 +1,7 @@
 package terrain;
 
+import entities.GameEntity;
+import entities.GameEntityLaser;
 import entities.GameEntityManager;
 import inputs.GameInputManager;
 import utils.GameDirection;
@@ -25,13 +27,15 @@ public class GameTileEmitter extends GameTileInteractable {
             GameStateManager state_manager,
             GameTilemap tilemap,
             GameTileInteractable previous,
-            Object entity,
+            GameEntity entity,
             Vector2 offset
     ) {
-        if ( entity instanceof Object laser ) {
-            setEntity( entity );
-            //laser.trace( tilemap, m_direction );
-        }
+        if ( !( entity instanceof GameEntityLaser laser ) )
+            return;
+
+        setEntity( entity );
+
+        laser.trace( tilemap, m_direction );
     }
 
     @Override

@@ -1,5 +1,6 @@
 package terrain;
 
+import entities.GameEntity;
 import entities.GameEntityManager;
 import inputs.GameInputManager;
 import utils.GameStateManager;
@@ -9,7 +10,7 @@ import java.awt.*;
 
 public abstract class GameTileInteractable extends GameTile implements GameTileTickable {
 
-    private Object m_entity;
+    private GameEntity m_entity;
 
     public GameTileInteractable( Vector2 location, Vector2 dimensions, Color color, boolean is_traversable ) {
         super( is_traversable, location, dimensions, color );
@@ -17,13 +18,13 @@ public abstract class GameTileInteractable extends GameTile implements GameTileT
         m_entity = null;
     }
 
-    protected void setEntity( Object entity ) { m_entity = entity; }
+    protected void setEntity( GameEntity entity ) { m_entity = entity; }
 
     public void onEnter(
             GameStateManager state_manager,
             GameTilemap tilemap,
             GameTileInteractable previous,
-            Object entity,
+            GameEntity entity,
             Vector2 offset
     ) {
         if ( previous != null )
@@ -41,6 +42,6 @@ public abstract class GameTileInteractable extends GameTile implements GameTileT
             GameTilemap tilemap
     );
 
-    public Object getEntity( ) { return m_entity; }
+    public GameEntity getEntity( ) { return m_entity; }
 
 }

@@ -3,14 +3,24 @@ package entities;
 import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import terrain.GameTilemap;
+import utils.GameDirection;
 import utils.GameStateManager;
 import utils.Vector2;
 
+import java.awt.*;
+
 public class GameEntityPlayer extends GameEntity {
 
-    public GameEntityPlayer( Vector2 location ) {
-        super( location );
+    private float m_diameter;
+    private GameDirection m_direction = GameDirection.None;
+
+    public GameEntityPlayer( Vector2 location, float tile_dimensions ) {
+        super( location.sub( tile_dimensions * .5f ));
+
+        m_diameter = tile_dimensions * .5f;
     }
+
+    public void setLockDirection( GameDirection direction ) { m_direction = direction; }
 
     @Override
     public void onCollide(
@@ -33,6 +43,9 @@ public class GameEntityPlayer extends GameEntity {
 
     @Override
     public void display( GameRenderManager render_manager ) {
+        render_manager.drawCircle( getLocation( ), m_diameter, Color.RED );
     }
+
+    public float getDiameter( ) { return m_diameter; }
 
 }
