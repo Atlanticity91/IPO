@@ -78,7 +78,7 @@ public class GameEntityPlayer extends GameEntity {
             float top = north.getLocalHitbox().getMax().getY() + getRadius();
             if (top >= location.getY()) {
                 setLocation( new Vector2(location.getX(), top) );
-                m_velocity = m_velocity.negateY();
+                m_velocity = new Vector2( m_velocity.getX(), -Math.abs(m_velocity.getY()) );
             }
         }
 
@@ -87,7 +87,7 @@ public class GameEntityPlayer extends GameEntity {
             float right = east.getLocalHitbox().getMin().getX() - getRadius();
             if (right <= location.getX()) {
                 setLocation( new Vector2(right, location.getY()) );
-                m_velocity = m_velocity.negateX();
+                m_velocity = new Vector2( -Math.abs(m_velocity.getX()), m_velocity.getY() );
             }
         }
 
@@ -96,7 +96,7 @@ public class GameEntityPlayer extends GameEntity {
             float bottom = south.getLocalHitbox().getMin().getY() - getRadius();
             if (bottom <= location.getY()) {
                 setLocation( new Vector2( location.getX(), bottom) );
-                m_velocity = m_velocity.negateY();
+                m_velocity = new Vector2( m_velocity.getX(), Math.abs(m_velocity.getY()) );
             }
         }
 
@@ -105,7 +105,7 @@ public class GameEntityPlayer extends GameEntity {
             float left = west.getLocalHitbox().getMax().getX() + getRadius();
             if (left <= location.getX()) {
                 setLocation( new Vector2(left, location.getY()) );
-                m_velocity = m_velocity.negateX();
+                m_velocity = new Vector2( Math.abs(m_velocity.getX()), m_velocity.getY() );
             }
         }
 
