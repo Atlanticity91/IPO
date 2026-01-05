@@ -1,5 +1,6 @@
 package terrain;
 
+import entities.GameEntityBullet;
 import entities.GameEntityManager;
 import inputs.GameInputManager;
 import utils.GameDirection;
@@ -39,8 +40,9 @@ public class GameTileLauncher extends GameTile implements GameTileTickable {
         if ( !m_spawn_bullet || m_direction == GameDirection.None )
             return;
 
-        //GameEntityBullet bullet = entity_manager.spawn<GameEntityBullet>( getLocation( ) );
-        //bullet.applyForce( m_direction );
+        GameEntityBullet bullet = new GameEntityBullet( getLocation( ), tilemap.getTileDimensions( ).getX( ), m_direction );
+
+        entity_manager.addEntity( bullet );
 
         m_spawn_bullet = false;
     }

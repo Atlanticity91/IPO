@@ -86,6 +86,21 @@ public class Vector2 {
         return new Vector2( m_x * x, m_y * y );
     }
 
+    public Vector2 clamp( float min, float max ) {
+        return clamp( min, min, max, max );
+    }
+
+    public Vector2 clamp( Vector2 min, Vector2 max ) {
+        return clamp( min.m_x, min.m_y, max.m_x, max.m_y );
+    }
+
+    public Vector2 clamp( float min_x, float min_y, float max_x, float max_y ) {
+        return new Vector2(
+                Math.clamp( m_x, min_x, max_x ),
+                Math.clamp( m_y, min_y, max_y )
+        );
+    }
+
     public Vector2 negate( ) {
         return new Vector2( -m_x, -m_y );
     }
@@ -125,7 +140,7 @@ public class Vector2 {
     public Vector2 normalize( ) {
         final float mag = magnitude( );
 
-        return div( mag );
+        return ( mag != .0f ) ? div( mag ) : new Vector2( this );
     }
 
     public boolean isIn( Hitbox rectangle ) {

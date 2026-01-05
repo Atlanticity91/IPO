@@ -32,10 +32,15 @@ public class GameEntityManager {
             default : break;
         }
 
-        if ( entity != null ) {
-            entity.onSpawn( );
-            m_entity_list.add( entity );
-        }
+        return addEntity( entity );
+    }
+
+    public GameEntity addEntity( GameEntity entity ) {
+        if ( entity == null )
+            return null;
+
+        entity.onSpawn( );
+        m_entity_list.add( entity );
 
         return entity;
     }
@@ -48,7 +53,7 @@ public class GameEntityManager {
         m_entity_list.remove( entity );
     }
 
-    public void tick(
+    private void tickEntities(
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameTilemap tilemap
@@ -57,17 +62,49 @@ public class GameEntityManager {
             if ( entity.getIsAlive( ) )
                 entity.tick( state_manager, input_manager, tilemap, this );
         }
+    }
+
+    private void tickCollisions( GameStateManager state_manager ) {
+        GameEntityPlayer player = getFirst( GameEntityPlayer.class );
+
+        if ( player == null )
+            return;
+
+        for ( GameEntity entity : m_entity_list ) {
+            if ( entity != player ) {
+                final Vector2 offset = player.doCollide( entity );
+
+                if ( offset != null )
+                    entity.onCollide( state_manager, this, player, offset );
+            }
+        }
+    }
+
+    public void tick(
+            GameStateManager state_manager,
+            GameInputManager input_manager,
+            GameTilemap tilemap
+    ) {
+        tickEntities( state_manager, input_manager, tilemap );
+        tickCollisions( state_manager );
 
         m_entity_list.removeIf( e -> !e.getIsAlive( ) );
     }
 
     public void display( GameRenderManager render_manager ) {
-        for ( GameEntity entity : m_entity_list ) {
-            if ( entity.getIsAlive( ) )
-                entity.display( render_manager );
-        }
+        for ( GameEntity entity : m_entity_list )
+            entity.display( render_manager );
     }
 
     public ArrayList<GameEntity> getAll( ) { return m_entity_list; }
+
+    public <T extends GameEntity> T getFirst( Class<T> entity_class ) {
+        for ( GameEntity entity : m_entity_list ) {
+            if ( entity_class.isInstance( entity ) )
+                return entity_class.cast( entity );
+        }
+
+        return null;
+    }
 
 }

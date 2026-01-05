@@ -28,6 +28,8 @@ public class GameRenderManager {
         m_graphics = graphics;
         m_font_metrics = graphics.getFontMetrics( );
 
+        ((Graphics2D)m_graphics).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+
         setOrigin( 0.f, 0.f );
     }
 

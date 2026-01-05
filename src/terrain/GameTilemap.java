@@ -44,7 +44,11 @@ public class GameTilemap {
             case '#' : tile = new GameTileDecoration( location, dimensions, false ); break;
             case ' ' : tile = new GameTileDecoration( location, dimensions, true ); break;
             case 'O' : tile = new GameTileOutput( location, dimensions, Color.cyan ); break;
-
+            case 'H' : break;
+            case '/' : break;
+            case '\\' : break;
+            case 'T' : tile = new GameTileTeleporter( location, dimensions, Color.orange ); break;
+            case 'l' : tile = new GameTileEmitter( location, dimensions, GameDirection.North ); break;
             default : break;
         }
 
@@ -53,8 +57,6 @@ public class GameTilemap {
 
         return tile;
     }
-
-    public void clear( ) { m_tiles = null; }
 
     public void tick(
             GameStateManager state_manager,
@@ -109,7 +111,7 @@ public class GameTilemap {
     public GameTile getTile( int x, int y ) { return m_tiles[ y * m_columns + x ]; }
 
     public GameTile getTileAt( Vector2 location, GameDirection direction ) {
-        final Vector2 adjust_pos = location.sub( m_origin ).div( m_tile_dimensions );
+        final Vector2 adjust_pos = location.div( m_tile_dimensions );
         final Vector2 tile_pos = getLocationAt( adjust_pos, direction );
         final int x = (int)tile_pos.getX( );
         final int y = (int)tile_pos.getY( );

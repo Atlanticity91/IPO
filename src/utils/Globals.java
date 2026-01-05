@@ -17,4 +17,8 @@ public class Globals {
 
     public static final int MAX_LIVE_COUNT = 3;
 
+    public static final float BRAKE_FACTOR = .2f;
+    public static final float ACCELERATION_FACTOR = .5f;
+    public static final float MAX_SPEED = 100.f;
+
 }

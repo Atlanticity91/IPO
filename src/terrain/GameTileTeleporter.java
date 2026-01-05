@@ -35,6 +35,9 @@ public class GameTileTeleporter extends GameTileInteractable {
             GameEntity entity,
             Vector2 offset
     ) {
+        if ( entity == null )
+            return;
+
         super.onEnter( state_manager, tilemap, previous, entity, offset );
 
         ArrayList<GameTileTeleporter> dest_list = tilemap.getAllTiles( GameTileTeleporter.class, this );
