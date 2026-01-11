@@ -29,10 +29,6 @@ public class GameEntityManager {
 
         switch ( tile_type ) {
             case 'v' : entity = new GameEntityPlayer( location, dimensions ); break;
-            case 'l' :
-            case 'L' :
-            case 'j' :
-            case 'J' : entity = new GameEntityLaser( location ); break;
 
             default : break;
         }
