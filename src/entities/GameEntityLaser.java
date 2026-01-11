@@ -2,6 +2,7 @@ package entities;
 
 import graphics.GameRenderManager;
 import inputs.GameInputManager;
+import jdk.management.jfr.SettingDescriptorInfo;
 import terrain.GameTile;
 import terrain.GameTileMirror;
 import terrain.GameTilemap;
@@ -10,12 +11,73 @@ import utils.GameStateManager;
 import utils.Vector2;
 
 import java.awt.*;
-import java.io.ObjectInputStream;
 
 public class GameEntityLaser extends GameEntity {
 
+    private Color m_color;
+    private GameDirection m_direction = GameDirection.None;
+
     public GameEntityLaser( Vector2 location ) {
         super( location, Vector2.Zero );
+
+        m_color = new Color( 9, 219, 249 );
+    }
+
+    private Vector2 acquireRayHit( GameTilemap tilemap, GameDirection direction ) {
+        final float tile_dimension = tilemap.getTileDimensions( ).getX( );
+        Vector2 tile_position = getLocation( );
+        GameTile tile = null;
+
+        do {
+            switch ( direction ) {
+                case GameDirection.North : tile_position = tile_position.add(  0.f, -tile_dimension ); break;
+                case GameDirection.South : tile_position = tile_position.add(  0.f,  tile_dimension ); break;
+                case GameDirection.East  : tile_position = tile_position.add(  tile_dimension,  0.f ); break;
+                case GameDirection.West  : tile_position = tile_position.add( -tile_dimension,  0.f ); break;
+                default : return null;
+            }
+
+            tile = tilemap.getTile( tile_position );
+        } while ( tile != null && tile.isTraversable( ) && !( tile instanceof GameTileMirror ) );
+
+        return tile_position;
+    }
+
+    private void traceBeam(
+            GameTilemap tilemap,
+            GameDirection direction,
+            Vector2 hit_location
+    ) {
+        final float half_dimensions = tilemap.getTileDimensions( ).getX( ) *.5f;
+        final Vector2 old_location = getLocation( );
+        final Vector2 beam = hit_location.sub( old_location ).sub( half_dimensions );
+        final float beam_thickness = tilemap.getTileDimensions( ).getX( ) * .2f;
+
+        Vector2 dimensions;
+        if ( direction == GameDirection.North || direction == GameDirection.South )
+            dimensions = new Vector2( beam_thickness, Math.abs( beam.getY( ) ) );
+        else
+            dimensions = new Vector2( Math.abs( beam.getX( ) ), beam_thickness );
+        setDimensions( dimensions );
+
+        Vector2 location;
+        switch ( direction ) {
+            case GameDirection.North : location = old_location.add( -dimensions.getX( ), -dimensions.getY( ) ).add( dimensions.getX( ) * .5f, .0f ); break;
+            case GameDirection.South : location = old_location.add( -dimensions.getX( ), .0f ).add( dimensions.getX( ) * .5f, .0f ); break;
+            case GameDirection.East  : location = old_location.add( .0f, -dimensions.getY( ) ).add( .0f, dimensions.getY( ) * .5f ); break;
+            case GameDirection.West  : location = old_location.sub( dimensions ).add( .0f, dimensions.getY( ) * .5f ); break;
+            default : return;
+        }
+        setLocation( location.add( half_dimensions ) );
+    }
+
+    private void doHitMirror(
+            GameStateManager state_manager,
+            GameTilemap tilemap,
+            Vector2 hit_location
+    ) {
+        if ( tilemap.getTile( hit_location ) instanceof GameTileMirror mirror )
+            mirror.onEnter( state_manager, tilemap, null, this, Vector2.Zero );
     }
 
     public void trace(
@@ -23,42 +85,12 @@ public class GameEntityLaser extends GameEntity {
             GameTilemap tilemap,
             GameDirection direction
     ) {
-        int x = 0;
-        int y = 0;
+        m_direction = direction;
 
-        switch ( direction ) {
-            case GameDirection.North : y = -1; break;
-            case GameDirection.South : y =  1; break;
-            case GameDirection.East  : x = -1; break;
-            case GameDirection.West  : x =  1; break;
-            default : return;
-        }
+        final Vector2 hit_location = acquireRayHit( tilemap, direction );
 
-        GameTile tile = null;
-
-        do {
-            tile = tilemap.getTile( x, y );
-
-            if ( x > 0 ) x += 1;
-            if ( x < 0 ) x -= 1;
-            if ( y > 0 ) y += 1;
-            if ( y < 0 ) y -= 1;
-        } while ( tile != null && tile.isTraversable( ) && !( tile instanceof GameTileMirror ) );
-
-        if ( tile instanceof GameTileMirror mirror )
-            mirror.onEnter( state_manager, tilemap, null, this, Vector2.Zero );
-
-        final Vector2 tile_dimensions = tilemap.getTileDimensions( );
-        final Vector2 half_tile = tile_dimensions.div( 2.f );
-        final float width = .2f;
-
-        if ( x != 0 ) {
-            setDimensions(new Vector2(x * tile_dimensions.getX(), tile_dimensions.getX() * width));
-            setLocation( getLocation().add( 0.f, getDimensions().getY() / 2.f ) );
-        }else if ( y != 0 ) {
-            setDimensions(new Vector2(tile_dimensions.getX() * width, y * tile_dimensions.getY()));
-            setLocation( getLocation().add( getDimensions().getX() / 2.f , 0.f));
-        }
+        traceBeam( tilemap, direction, hit_location );
+        doHitMirror( state_manager, tilemap, hit_location );
     }
 
     @Override
@@ -85,9 +117,11 @@ public class GameEntityLaser extends GameEntity {
     ) {
     }
 
+    public GameDirection getDirection( ) { return m_direction; }
+
     @Override
     public void display( GameRenderManager render_manager ) {
-        render_manager.drawRect( getLocation( ), getDimensions( ), Color.orange );
+        render_manager.drawRect( getLocation( ), getDimensions( ), m_color );
     }
 
 }
