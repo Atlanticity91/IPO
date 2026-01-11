@@ -1,7 +1,9 @@
 package terrain;
 
+import entities.GameEntity;
 import entities.GameEntityLaser;
 import entities.GameEntityManager;
+import graphics.GameRenderManager;
 import inputs.GameInputManager;
 import inputs.GameInputState;
 import utils.GameDirection;
@@ -13,6 +15,8 @@ import java.awt.event.KeyEvent;
 
 public class GameTileMirror extends GameTileEmitter {
 
+    private boolean m_has_source = false;
+
     public GameTileMirror(
             Vector2 location,
             Vector2 dimensions,
@@ -21,20 +25,18 @@ public class GameTileMirror extends GameTileEmitter {
         super( location, dimensions, direction );
     }
 
-    private void spawnLaser(
+    @Override
+    public void onEnter(
             GameStateManager state_manager,
-            GameEntityManager entity_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            GameTileInteractable previous,
+            GameEntity entity,
+            Vector2 offset
     ) {
-        entity_manager.kill( getEntity( ) );
-
-        GameEntityLaser laser = new GameEntityLaser( getLocation( ) );
-
-        entity_manager.addEntity( laser );
-        laser.trace( state_manager, tilemap, getDirection( ) );
-
-        entity_manager.addEntity( laser );
-        setEntity( laser );
+        if ( entity instanceof GameEntityLaser laser ) {
+            setDirection( laser.getDirection( ) );
+            m_has_source = true;
+        }
     }
 
     @Override
@@ -45,10 +47,17 @@ public class GameTileMirror extends GameTileEmitter {
             GameTilemap tilemap,
             float delta_time
     ) {
-        if ( getEntity( ) == null )
+        if ( !m_has_source )
+            return;
+
+        final GameDirection old_direction = getDirection( );
+        final Hitbox hitbox = getLocalHitbox( ).move( tilemap.getOrigin( ) );
+
+        if ( old_direction != GameDirection.None && getEntity( ) == null ) {
             spawnLaser( state_manager, entity_manager, tilemap );
 
-        final Hitbox hitbox = getLocalHitbox( ).move( tilemap.getOrigin( ) );
+            return;
+        }
 
         if ( !input_manager.getMouseLocation( ).isIn( hitbox ) )
             return;
@@ -70,7 +79,23 @@ public class GameTileMirror extends GameTileEmitter {
             }
         }
 
-        spawnLaser( state_manager, entity_manager, tilemap );
+        if ( old_direction != getDirection()  )
+            spawnLaser( state_manager, entity_manager, tilemap );
+    }
+
+    @Override
+    public void display( GameRenderManager render_manager ) {
+        String sprite = "";
+
+        switch ( getDirection( ) ){
+            case GameDirection.North : sprite = "laser_north"; break;
+            case GameDirection.South : sprite = "laser_south"; break;
+            case GameDirection.West  : sprite = "laser_west"; break;
+            case GameDirection.East  : sprite = "laser_east"; break;
+        }
+
+        if ( !sprite.isEmpty( ) )
+            render_manager.drawSprite( sprite, getLocation( ), getDimensions( ), 0, 0 );
     }
 
 }
