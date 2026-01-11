@@ -23,18 +23,19 @@ public class GameTileEmitter extends GameTileInteractable {
 
     protected void setDirection( GameDirection direction ) { m_direction = direction; }
 
-    @Override
-    public void onEnter(
+    protected void spawnLaser(
             GameStateManager state_manager,
-            GameTilemap tilemap,
-            GameTileInteractable previous,
-            GameEntity entity,
-            Vector2 offset
+            GameEntityManager entity_manager,
+            GameTilemap tilemap
     ) {
-        super.onEnter( state_manager, tilemap, previous, entity, offset );
+        entity_manager.kill( getEntity( ) );
 
-        if ( entity instanceof GameEntityLaser laser )
-            laser.trace( state_manager, tilemap, m_direction );
+        GameEntityLaser laser = new GameEntityLaser( getLocation( ) );
+
+        entity_manager.addEntity( laser );
+        laser.trace( state_manager, tilemap, getDirection( ) );
+
+        setEntity( laser );
     }
 
     @Override
@@ -45,16 +46,13 @@ public class GameTileEmitter extends GameTileInteractable {
             GameTilemap tilemap,
             float delta_time
     ) {
+        if ( getEntity( ) == null )
+            spawnLaser( state_manager, entity_manager, tilemap );
     }
 
     @Override
-    public void display(GameRenderManager render_manager ) {
-        super.display( render_manager );
-
-        if ( m_direction == GameDirection.West )
-            render_manager.drawSprite( "laser_droite", getLocation(), getDimensions( ), 0, 0 );
-        else if ( m_direction == GameDirection.East )
-            render_manager.drawSprite( "laser_gauche", getLocation(), getDimensions( ), 0, 0 );
+    public void display( GameRenderManager render_manager ) {
+        render_manager.drawSprite( "laser",getLocation( ), getDimensions( ), 0, 0 );
     }
 
     public GameDirection getDirection( ) { return m_direction; }
