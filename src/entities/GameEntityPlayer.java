@@ -49,8 +49,8 @@ public class GameEntityPlayer extends GameEntity {
     private void checkCorner(GameTile tile, float cornerX, float cornerY) {
         if (tile.isTraversable()) return;
 
-        float dx = getLocation().getX() - cornerX;
-        float dy = getLocation().getY() - cornerY;
+        float dx = getLocation().getX() + getRadius() - cornerX;
+        float dy = getLocation().getY() + getRadius() - cornerY;
 
         float dist = (float)Math.sqrt(dx * dx + dy * dy);
 
@@ -63,8 +63,8 @@ public class GameEntityPlayer extends GameEntity {
 
             if (vCoin < 0) {
                 m_velocity = new Vector2(
-                        m_velocity.getX() - 2 * vCoin * nx,
-                        m_velocity.getY() - 2 * vCoin * ny
+                        m_velocity.getX() - 2 * vCoin * nx + getRadius(),
+                        m_velocity.getY() - 2 * vCoin * ny + getRadius()
                 );
             }
         }
@@ -75,7 +75,7 @@ public class GameEntityPlayer extends GameEntity {
 
         GameTile north = tilemap.getTileAt( location, GameDirection.North);
         if ( north != null && !north.isTraversable()) {
-            float top = north.getLocalHitbox().getMax().getY() + getRadius();
+            float top = north.getLocalHitbox().getMax().getY();
             if (top >= location.getY()) {
                 setLocation( new Vector2(location.getX(), top) );
                 m_velocity = new Vector2( m_velocity.getX(), -Math.abs(m_velocity.getY()) );
@@ -84,7 +84,7 @@ public class GameEntityPlayer extends GameEntity {
 
         GameTile east = tilemap.getTileAt( location, GameDirection.East);
         if ( east != null && !east.isTraversable()) {
-            float right = east.getLocalHitbox().getMin().getX() - getRadius();
+            float right = east.getLocalHitbox().getMin().getX() - getDiameter();
             if (right <= location.getX()) {
                 setLocation( new Vector2(right, location.getY()) );
                 m_velocity = new Vector2( -Math.abs(m_velocity.getX()), m_velocity.getY() );
@@ -93,7 +93,7 @@ public class GameEntityPlayer extends GameEntity {
 
         GameTile south = tilemap.getTileAt( location, GameDirection.South);
         if ( south != null && !south.isTraversable()) {
-            float bottom = south.getLocalHitbox().getMin().getY() - getRadius();
+            float bottom = south.getLocalHitbox().getMin().getY() - getDiameter();
             if (bottom <= location.getY()) {
                 setLocation( new Vector2( location.getX(), bottom) );
                 m_velocity = new Vector2( m_velocity.getX(), Math.abs(m_velocity.getY()) );
@@ -102,8 +102,8 @@ public class GameEntityPlayer extends GameEntity {
 
         GameTile west = tilemap.getTileAt( location, GameDirection.West);
         if ( west != null && !west.isTraversable()) {
-            float left = west.getLocalHitbox().getMax().getX() + getRadius();
-            if (left <= location.getX()) {
+            float left = west.getLocalHitbox().getMax().getX();
+            if (left >= location.getX()) {
                 setLocation( new Vector2(left, location.getY()) );
                 m_velocity = new Vector2( Math.abs(m_velocity.getX()), m_velocity.getY() );
             }
@@ -143,9 +143,10 @@ public class GameEntityPlayer extends GameEntity {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameTilemap tilemap,
-            GameEntityManager entity_manager
+            GameEntityManager entity_manager,
+            float delta_time
     ) {
-        final Vector2 old_location = getLocation( );
+        final Vector2 old_location = getLocation( ).add(getRadius());
         final GameTile current_tile = tilemap.getTile( old_location );
 
 
@@ -158,7 +159,7 @@ public class GameEntityPlayer extends GameEntity {
         else
             m_velocity = m_velocity.sub(dir.scale(Globals.BRAKE_FACTOR));
 
-        if ( isMouseIn( input_manager.getMouseLocation( ).sub( tilemap.getOrigin( ) ) ) )
+        //if ( isMouseIn( input_manager.getMouseLocation( ).sub( tilemap.getOrigin( ) ) ) )
             m_velocity = m_velocity.add( input_manager.getMouseDirection( ).scale( Globals.ACCELERATION_FACTOR ) );
 
         if ( m_velocity.magnitude( ) >= Globals.MAX_SPEED )
@@ -166,7 +167,9 @@ public class GameEntityPlayer extends GameEntity {
 
         move( m_velocity.add( m_velocity.scale( m_slippery_factor ) ) );
 
-        final GameTile new_tile = tilemap.getTile( getLocation( ) );
+        checkTileCollision( tilemap );
+
+        final GameTile new_tile = tilemap.getTile( getLocation( ).add( getRadius( ) ) );
 
         if (new_tile instanceof GameTileInteractable interactable ) {
             final Vector2 offset = getDimensions( ).sub( old_location );
