@@ -68,6 +68,7 @@ public class Game
         m_render_manager.load( "wall", "/assets/wall.png", 1, 1 );
         m_render_manager.load( "launcher", "/assets/launcher.png", 1, 1 );
         m_render_manager.load( "hole", "/assets/hole.png", 1, 1 );
+        m_render_manager.load( "out", "/assets/out.png", 1, 1 );
 
         m_render_manager.setButtonTexture( "ui_borders" );
     }

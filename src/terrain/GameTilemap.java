@@ -45,6 +45,8 @@ public class GameTilemap {
             case '#'  : tile = new GameTileDecoration( location, dimensions, false ); break;
             case 'v'  :
             case ' '  : tile = new GameTileDecoration( location, dimensions, true ); break;
+            case 'g'  : tile = new GameTileLauncher( location, dimensions, GameDirection.East ); break;
+            case 'G'  : tile = new GameTileLauncher( location, dimensions, GameDirection.West ); break;
             case 'O'  : tile = new GameTileOutput( location, dimensions, Color.cyan ); break;
             case 'H'  : tile = new GameTileHole( location, dimensions ); break;
             case 'I'  : tile = new GameTileIce( location, dimensions ); break;

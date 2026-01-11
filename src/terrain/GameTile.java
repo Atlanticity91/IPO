@@ -8,10 +8,10 @@ import java.awt.*;
 
 public abstract class GameTile {
 
-    private final boolean m_is_traversable;
+    protected boolean m_is_traversable;
+    protected Color m_color;
     private final Vector2 m_location;
     private final Vector2 m_dimensions;
-    protected final Color m_color;
 
     public GameTile( boolean is_traversable, Vector2 location, Vector2 dimensions, Color color ) {
         m_is_traversable = is_traversable;

@@ -55,7 +55,6 @@ public class GameEntityManager {
             return;
 
         entity.onKill( );
-        m_entity_list.remove( entity );
     }
 
     private void tickEntities(

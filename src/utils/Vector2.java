@@ -124,6 +124,20 @@ public class Vector2 {
         );
     }
 
+    public static Vector2 FromDirection( GameDirection direction, float scale ) {
+        return switch ( direction ) {
+            case None -> new Vector2( scale );
+            case North -> new Vector2( 0.f, -scale );
+            case East -> new Vector2( scale, 0.f );
+            case South -> new Vector2( 0.f, scale );
+            case West -> new Vector2( -scale, 0.f );
+            case Northeast -> new Vector2( scale, -scale );
+            case Southeast -> new Vector2( scale, scale );
+            case Southwest -> new Vector2( -scale, scale );
+            case Northwest -> new Vector2( -scale, -scale );
+        };
+    }
+
     public static Vector2 direction( Vector2 src, Vector2 dst ) {
         return dst.sub( src ).normalize( );
     }

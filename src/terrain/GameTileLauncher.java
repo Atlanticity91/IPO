@@ -31,6 +31,13 @@ public class GameTileLauncher extends GameTile implements GameTileTickable {
 
     public void setDirection( GameDirection direction ) { m_direction = direction; }
 
+    private Vector2 acquireSpawnLocation( float tile_dimension ) {
+        final float half_tile = tile_dimension * .5f;
+        final Vector2 center = getLocation( ).add( half_tile );
+
+        return center.add( Vector2.FromDirection( m_direction, half_tile ) );
+    }
+
     @Override
     public void tick(
             GameStateManager state_manager,
@@ -42,7 +49,10 @@ public class GameTileLauncher extends GameTile implements GameTileTickable {
         if ( !m_spawn_bullet || m_direction == GameDirection.None )
             return;
 
-        GameEntityBullet bullet = new GameEntityBullet( getLocation( ), tilemap.getTileDimensions( ).getX( ), m_direction );
+        final float tile_dimension = tilemap.getTileDimensions( ).getX( );
+        final Vector2 location = acquireSpawnLocation( tile_dimension );
+
+        GameEntityBullet bullet = new GameEntityBullet( location, tile_dimension, m_direction );
 
         entity_manager.addEntity( bullet );
 
