@@ -53,10 +53,10 @@ public class GameTilemap {
             case '/'  : tile = new GameTileMirror( location, dimensions, GameDirection.West ); break;
             case '\\' : tile = new GameTileMirror( location, dimensions, GameDirection.East ); break;
             case 'T'  : tile = new GameTileTeleporter( location, dimensions, Color.orange ); break;
-            case 'l'  : tile = new GameTileEmitter( location, dimensions, GameDirection.North ); break;
-            case 'L'  : tile = new GameTileEmitter( location, dimensions, GameDirection.South ); break;
-            case 'j'  : tile = new GameTileEmitter( location, dimensions, GameDirection.East ); break;
-            case 'J'  : tile = new GameTileEmitter( location, dimensions, GameDirection.West ); break;
+            case 'l'  : tile = new GameTileEmitter( location, dimensions, GameDirection.West ); break;
+            case 'L'  : tile = new GameTileEmitter( location, dimensions, GameDirection.East ); break;
+            case 'j'  : tile = new GameTileEmitter( location, dimensions, GameDirection.North ); break;
+            case 'J'  : tile = new GameTileEmitter( location, dimensions, GameDirection.South ); break;
 
             default : break;
         }
@@ -119,7 +119,7 @@ public class GameTilemap {
     }
 
     public GameTile getTile( int x, int y ) {
-        if ( x < 0 || x >= m_columns || y < 0 || y > m_rows )
+        if ( x < 0 || x >= m_columns || y < 0 || y >= m_rows )
             return null;
 
         return m_tiles[ y * m_columns + x ];
