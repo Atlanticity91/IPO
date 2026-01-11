@@ -159,7 +159,7 @@ public class GameEntityPlayer extends GameEntity {
         else
             m_velocity = m_velocity.sub(dir.scale(Globals.BRAKE_FACTOR));
 
-        //if ( isMouseIn( input_manager.getMouseLocation( ).sub( tilemap.getOrigin( ) ) ) )
+        if ( isMouseIn( input_manager.getMouseLocation( ).sub( tilemap.getOrigin( ) ) ) )
             m_velocity = m_velocity.add( input_manager.getMouseDirection( ).scale( Globals.ACCELERATION_FACTOR ) );
 
         if ( m_velocity.magnitude( ) >= Globals.MAX_SPEED )
