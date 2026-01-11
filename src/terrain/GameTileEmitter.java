@@ -42,12 +42,13 @@ public class GameTileEmitter extends GameTileInteractable {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameEntityManager entity_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     ) {
     }
 
     @Override
-    public void display(GameRenderManager render_manager) {
+    public void display(GameRenderManager render_manager ) {
         super.display( render_manager );
 
         if ( m_direction == GameDirection.West )

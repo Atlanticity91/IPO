@@ -24,6 +24,8 @@ public abstract class GameEntity {
 
     public void setLocation( Vector2 location ) { m_location = location; }
 
+    public void setLocation( float x, float y ) { m_location.set( x, y ); }
+
     public void move( float offset ) { m_location = m_location.add( offset ); }
 
     public void move( float x, float y ) { m_location = m_location.add( x, y ); }
@@ -43,7 +45,8 @@ public abstract class GameEntity {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameTilemap tilemap,
-            GameEntityManager entity_manager
+            GameEntityManager entity_manager,
+            float delta_time
     );
 
     public void display( GameRenderManager render_manager ) {

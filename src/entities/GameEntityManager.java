@@ -2,9 +2,7 @@ package entities;
 
 import graphics.GameRenderManager;
 import inputs.GameInputManager;
-import terrain.GameTileEmitter;
 import terrain.GameTilemap;
-import utils.GameDirection;
 import utils.GameStateManager;
 import utils.Vector2;
 
@@ -63,11 +61,12 @@ public class GameEntityManager {
     private void tickEntities(
             GameStateManager state_manager,
             GameInputManager input_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     ) {
         for ( GameEntity entity : m_entity_list ) {
             if ( entity.getIsAlive( ) )
-                entity.tick( state_manager, input_manager, tilemap, this );
+                entity.tick( state_manager, input_manager, tilemap, this, delta_time );
         }
     }
 
@@ -90,9 +89,10 @@ public class GameEntityManager {
     public void tick(
             GameStateManager state_manager,
             GameInputManager input_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     ) {
-        tickEntities( state_manager, input_manager, tilemap );
+        tickEntities( state_manager, input_manager, tilemap, delta_time );
         tickCollisions( state_manager );
 
         m_entity_list.removeIf( e -> !e.getIsAlive( ) );

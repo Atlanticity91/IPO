@@ -67,14 +67,15 @@ public class GameTilemap {
     public void tick(
             GameStateManager state_manager,
             GameInputManager input_manager,
-            GameEntityManager entity_manager
+            GameEntityManager entity_manager,
+            float delta_time
     ) {
         if ( m_tiles == null )
             return;
 
         for ( GameTile tile : m_tiles ) {
             if ( tile instanceof GameTileTickable tickable )
-                tickable.tick( state_manager, input_manager, entity_manager, this );
+                tickable.tick( state_manager, input_manager, entity_manager, this, delta_time );
         }
     }
 
@@ -99,14 +100,14 @@ public class GameTilemap {
     private Vector2 getLocationAt( Vector2 location, GameDirection direction ) {
         return switch ( direction ) {
             case None -> location;
-            case North -> location.add( 0.f, 1.f );
+            case North -> location.add( 0.f, -1.f );
             case East -> location.add( 1.f, 0.f );
-            case South -> location.add( 0.f, -1.f );
+            case South -> location.add( 0.f, 1.f );
             case West -> location.add( -1.f, 0.f );
-            case Northeast -> location.add( 1.f );
-            case Southeast -> location.add( 1.f, -1.f );
-            case Southwest -> location.add( -1.f, -1.f );
-            case Northwest -> location.add( -1.f, 1.f );
+            case Northeast -> location.add( 1.f, -1.f );
+            case Southeast -> location.add( 1.f, 1.f );
+            case Southwest -> location.add( -1.f, 1.f );
+            case Northwest -> location.add( -1.f, -1.f );
         };
     }
 

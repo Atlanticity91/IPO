@@ -39,7 +39,8 @@ public abstract class GameTileInteractable extends GameTile implements GameTileT
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameEntityManager entity_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     );
 
     public GameEntity getEntity( ) { return m_entity; }

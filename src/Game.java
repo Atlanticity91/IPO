@@ -22,6 +22,7 @@ public class Game
     private GameTilemap m_tilemap;
     private GameStateManager m_state_manager;
     private GameUIManager m_ui;
+    private long m_last_time = 0;
 
     public Game( ) {
         super( );
@@ -126,6 +127,18 @@ public class Game
         m_input_manager.notifyMouseMoved( mouse_event, this );
     }
 
+    public void tick( ) {
+        long now = System.nanoTime( );
+        float delta_time = ( now - m_last_time ) * 1e-9f;
+
+        if ( m_state_manager.is( GameState.PlayScreen ) ) {
+            m_tilemap.tick( m_state_manager, m_input_manager, m_entities, delta_time );
+            m_entities.tick( m_state_manager, m_input_manager, m_tilemap, delta_time );
+        }
+
+        m_last_time = now;
+    }
+
     @Override
     protected void paintComponent( Graphics graphics ) {
         super.paintComponent( graphics );
@@ -133,9 +146,6 @@ public class Game
         m_render_manager.prepare( graphics );
 
         if ( m_state_manager.is( GameState.PlayScreen ) ) {
-            m_tilemap.tick( m_state_manager, m_input_manager, m_entities );
-            m_entities.tick( m_state_manager, m_input_manager, m_tilemap );
-
             m_render_manager.setOrigin( m_tilemap.getOrigin( ) );
             m_tilemap.display( m_render_manager );
             m_entities.display( m_render_manager );
@@ -143,7 +153,6 @@ public class Game
         }
 
         m_ui.display( m_state_manager, m_input_manager, m_render_manager );
-
         m_input_manager.tick( );
     }
 

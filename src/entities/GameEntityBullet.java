@@ -42,7 +42,8 @@ public class GameEntityBullet extends GameEntity {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameTilemap tilemap,
-            GameEntityManager entity_manager
+            GameEntityManager entity_manager,
+            float delta_time
     ) {
         Vector2 acceleration = new Vector2( m_acceleration );
 

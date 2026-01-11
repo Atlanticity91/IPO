@@ -80,7 +80,8 @@ public class GameEntityLaser extends GameEntity {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameTilemap tilemap,
-            GameEntityManager entity_manager
+            GameEntityManager entity_manager,
+            float delta_time
     ) {
     }
 

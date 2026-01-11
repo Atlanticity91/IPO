@@ -42,7 +42,8 @@ public class GameTileMirror extends GameTileEmitter {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameEntityManager entity_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     ) {
         if ( getEntity( ) == null )
             spawnLaser( state_manager, entity_manager, tilemap );

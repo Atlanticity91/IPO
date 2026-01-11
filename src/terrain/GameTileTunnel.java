@@ -49,7 +49,8 @@ public class GameTileTunnel extends GameTileInteractable {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameEntityManager entity_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     ) {
     }
 

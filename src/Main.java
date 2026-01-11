@@ -14,7 +14,10 @@ public class Main {
 
         Timer timer = new Timer(
                 1000 / Globals.TARGET_FPS,
-                e -> { window.repaint( ); }
+                e -> {
+                    game.tick( );
+                    window.repaint( );
+                }
         );
         timer.start( );
     }

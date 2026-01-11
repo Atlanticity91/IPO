@@ -24,6 +24,13 @@ public abstract class GameTile {
         render_manager.drawRect( m_location, m_dimensions, m_color );
     }
 
+    @Override
+    public String toString( ) {
+        final Vector2 tile_pos = m_location.div( m_dimensions.getX( ) );
+
+        return "tile[" + (int)tile_pos.getX( ) + ", " + (int)tile_pos.getY( ) + "] : " + m_location + ", " + m_dimensions;
+    }
+
     public boolean isTraversable( ) { return m_is_traversable; }
 
     public Vector2 getLocation( ) { return m_location; }

@@ -36,7 +36,8 @@ public class GameTileLauncher extends GameTile implements GameTileTickable {
             GameStateManager state_manager,
             GameInputManager input_manager,
             GameEntityManager entity_manager,
-            GameTilemap tilemap
+            GameTilemap tilemap,
+            float delta_time
     ) {
         if ( !m_spawn_bullet || m_direction == GameDirection.None )
             return;

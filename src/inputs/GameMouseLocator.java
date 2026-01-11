@@ -26,7 +26,11 @@ public class GameMouseLocator {
     public Vector2 getLocation( ) { return m_new_location; }
 
     public Vector2 getDirection( ) {
-        return Vector2.direction( m_old_location, m_new_location );
+        final Vector2 direction = Vector2.direction( m_old_location, m_new_location );
+
+        m_old_location.set( m_new_location );
+
+        return direction;
     }
 
 }

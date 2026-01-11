@@ -23,4 +23,12 @@ public class Hitbox {
 
     public Vector2 getMax( ) { return m_max; }
 
+    public float left( ) { return m_min.getX( ); }
+
+    public float right( ) { return m_max.getX( ); }
+
+    public float bottom( ) { return m_min.getY( ); }
+
+    public float top( ) { return m_max.getY( ); }
+
 }

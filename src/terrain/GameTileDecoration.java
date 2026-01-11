@@ -1,6 +1,7 @@
 package terrain;
 
 import graphics.GameRenderManager;
+import utils.Hitbox;
 import utils.Vector2;
 
 import java.awt.*;
@@ -17,8 +18,11 @@ public class GameTileDecoration extends GameTile {
 
         if ( isTraversable( ) )
             render_manager.drawSprite( "deco", getLocation( ), getDimensions( ), 0, 0 );
-        else
-            render_manager.drawSprite( "wall", getLocation( ), getDimensions( ), 0, 0 );
+        else {
+            render_manager.drawSprite("wall", getLocation(), getDimensions(), 0, 0 );
+            final Hitbox h = getLocalHitbox( );
+            render_manager.drawRect( h.getMin(), h.getMax(), Color.red );
+        }
     }
 
 }
