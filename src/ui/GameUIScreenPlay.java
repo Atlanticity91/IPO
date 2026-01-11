@@ -83,7 +83,7 @@ public class GameUIScreenPlay extends GameUIScreen {
         displayTimer( render_manager, origin_y );
         displayInfo( state_manager, render_manager, origin_y );
 
-        if ( state_manager.getLiveCount( ) < 0 ) {
+        if ( state_manager.getLiveCount( ) == 0 ) {
             state_manager.setLevelTime( getElapsed( ) );
             state_manager.set( GameState.LoseScreen );
         }

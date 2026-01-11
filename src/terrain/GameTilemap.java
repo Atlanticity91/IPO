@@ -38,22 +38,23 @@ public class GameTilemap {
     public GameTile spawnTile( char tile_type, int column, int row ) {
         final Vector2 location = new Vector2( column * m_tile_dimensions, row * m_tile_dimensions );
         final Vector2 dimensions = new Vector2( m_tile_dimensions );
+
         GameTile tile = null;
 
         switch ( tile_type ) {
-            case '#' : tile = new GameTileDecoration( location, dimensions, false ); break;
-            case 'v' :
-            case ' ' : tile = new GameTileDecoration( location, dimensions, true ); break;
-            case 'O' : tile = new GameTileOutput( location, dimensions, Color.cyan ); break;
-            case 'H' : tile = new GameTileHole( location, dimensions ); break;
-            case 'I' : tile = new GameTileIce( location, dimensions ); break;
-            case '/' : tile = new GameTileMirror( location, dimensions, GameDirection.West ); break;
+            case '#'  : tile = new GameTileDecoration( location, dimensions, false ); break;
+            case 'v'  :
+            case ' '  : tile = new GameTileDecoration( location, dimensions, true ); break;
+            case 'O'  : tile = new GameTileOutput( location, dimensions, Color.cyan ); break;
+            case 'H'  : tile = new GameTileHole( location, dimensions ); break;
+            case 'I'  : tile = new GameTileIce( location, dimensions ); break;
+            case '/'  : tile = new GameTileMirror( location, dimensions, GameDirection.West ); break;
             case '\\' : tile = new GameTileMirror( location, dimensions, GameDirection.East ); break;
-            case 'T' : tile = new GameTileTeleporter( location, dimensions, Color.orange ); break;
-            case 'l' : tile = new GameTileEmitter( location, dimensions, GameDirection.North ); break;
-            case 'L' : tile = new GameTileEmitter( location, dimensions, GameDirection.South ); break;
-            case 'j' : tile = new GameTileEmitter( location, dimensions, GameDirection.East ); break;
-            case 'J' : tile = new GameTileEmitter( location, dimensions, GameDirection.West ); break;
+            case 'T'  : tile = new GameTileTeleporter( location, dimensions, Color.orange ); break;
+            case 'l'  : tile = new GameTileEmitter( location, dimensions, GameDirection.North ); break;
+            case 'L'  : tile = new GameTileEmitter( location, dimensions, GameDirection.South ); break;
+            case 'j'  : tile = new GameTileEmitter( location, dimensions, GameDirection.East ); break;
+            case 'J'  : tile = new GameTileEmitter( location, dimensions, GameDirection.West ); break;
 
             default : break;
         }

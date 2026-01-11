@@ -8,6 +8,7 @@ public class Hitbox {
     public Hitbox( Vector2 position, Vector2 dimensions ) {
         Vector2 a = position;
         Vector2 b = position.add( dimensions );
+
         m_min = new Vector2( Math.min( a.getX( ), b.getX( ) ), Math.min( a.getY( ), b.getY( ) ) );
         m_max = new Vector2( Math.max( a.getX( ), b.getX( ) ), Math.max( a.getY( ), b.getY( ) ) );
     }
