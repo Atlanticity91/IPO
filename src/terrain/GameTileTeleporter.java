@@ -71,8 +71,10 @@ public class GameTileTeleporter extends GameTileInteractable {
                     teleporter.lock( );
 
                 interactable.onEnter( state_manager, tilemap, this, player, Vector2.Zero );
-            } else
+            } else {
+                onLeave( );
                 player.setLocation( dest.getLocation( ) );
+            }
         }
     }
 

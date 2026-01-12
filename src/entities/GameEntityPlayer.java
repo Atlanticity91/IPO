@@ -171,14 +171,15 @@ public class GameEntityPlayer extends GameEntity {
 
         final GameTile new_tile = tilemap.getTile( getLocation( ).add( getRadius( ) ) );
 
-        if (new_tile instanceof GameTileInteractable interactable ) {
+        if ( new_tile instanceof GameTileInteractable interactable ) {
             final Vector2 offset = getDimensions( ).sub( old_location );
 
             if ( current_tile instanceof GameTileInteractable i )
                 interactable.onEnter(state_manager, tilemap, i, this, offset );
             else
                 interactable.onEnter(state_manager, tilemap, null, this, offset );
-        }
+        } else if ( current_tile instanceof GameTileInteractable interactable )
+            interactable.onLeave( );
     }
 
     private Vector2 getCircleCenter( Vector2 location, Vector2 dimensions ) {
