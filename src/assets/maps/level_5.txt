@@ -12,8 +12,8 @@
 #IIIIIIIII    /            /   #
 #ITIIIIIII  G                  #
 #IIIIIIIII                     #
-#IIIIIJIII       O             #
+#IIIIIlIII       O             #
 #IIIIIIIII  G                  #
 #IvIIIIIII                     #
-#IIIIIIIIIl                    #
+#IIIIIIIIIj                    #
 ################################
